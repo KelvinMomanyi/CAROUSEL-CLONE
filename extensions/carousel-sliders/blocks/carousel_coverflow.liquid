@@ -1,0 +1,62 @@
+{%- assign s=block.settings -%}
+{%liquid
+assign id = 'slider-11-'|append: block.id
+if s.collection_source == 'selected'
+assign c = s.selected_collection
+else
+assign c = collections.all
+endif
+assign m = s.products_limit|default: 6
+assign d = s.products_display_mode|default: 'limited'
+assign n = m
+if d == 'all'
+assign n = c.products_count|default: c.products.size|at_most: 10
+endif
+%}
+{%if c != blank and c.products_count > 0%}
+<div id="{{id}}" class="slider-11-root gradient{%if s.text_color != blank%} has-slider-text-color{%endif%}{%if s.text_font_size != blank%} has-slider-text-size{%endif%}{%if s.button_color != blank%} has-slider-button-color{%endif%}{%if s.button_text_color != blank%} has-slider-button-text-color{%endif%}{%if s.button_font_size != blank%} has-slider-button-size{%endif%}" data-carousel-root data-carousel-layout="slider-11" data-carousel-block-id="{{block.id}}" role="region" aria-roledescription="carousel" aria-label="{{s.accessibility_label|escape}}" style="
+--slider-11-height: {{s.section_height|escape}};
+{%if s.text_color != blank%}--slider-style-text-color: {{s.text_color}};{%endif%}
+{%if s.text_font_size != blank%}--slider-style-text-size: {{s.text_font_size|escape}};{%endif%}
+{%if s.button_color != blank%}--slider-style-button-color: {{s.button_color}};{%endif%}
+{%if s.button_text_color != blank%}--slider-style-button-text-color: {{s.button_text_color}};{%endif%}
+{%if s.button_font_size != blank%}--slider-style-button-size: {{s.button_font_size|escape}};{%endif%}
+" data-slider-11 {{block.shopify_attributes}}>
+<div class="container">
+<div id="slide-{{block.id}}" data-slider-11-track>
+{%for p in c.products limit: n%}
+{%assign v = p.selected_or_first_available_variant%}
+<article class="item"{%if p.featured_image%} style="background-image: url('{{p.featured_image|image_url: width: 1600}}');"{%endif%}>
+<div class="content">
+<div class="name">{{p.title|escape}}</div>
+<div class="price">
+{%if v.compare_at_price > v.price%}
+<span class="compare">{{v.compare_at_price|money_with_currency}}</span>
+{%endif%}
+<span>{{v.price|money_with_currency}}</span>
+</div>
+<div class="actions">
+{%if p.has_only_default_variant%}
+<form action="{{routes.cart_add_url}}" method="post" data-carousel-cart-form>
+<input type="hidden" name="id" value="{{v.id}}">
+<input type="hidden" name="quantity" value="1">
+<button class="add-to-cart" type="submit"{%unless v.available%} disabled{%endunless%}>{%if v.available%}{{'carousel.actions.add_to_cart'|t}}{%else%}{{'carousel.actions.sold_out'|t}}{%endif%}</button>
+</form>
+{%else%}
+<a class="add-to-cart" href="{{p.url}}" data-product-id="{{p.id}}" data-product-url>{{'carousel.actions.choose_options'|t}}</a>
+{%endif%}
+</div>
+</div>
+</article>
+{%endfor%}
+</div>
+<div class="buttons">
+<button id="prev-{{block.id}}" type="button" aria-label="{{'carousel.controls.previous'|t}}" data-slider-11-prev>&#8249;</button>
+<button id="next-{{block.id}}" type="button" aria-label="{{'carousel.controls.next'|t}}" data-slider-11-next>&#8250;</button>
+</div>
+</div>
+</div>
+{%elsif request.design_mode%}
+<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>
+{%endif%}
+{%schema%}{"name":"Carousel: Coverflow","target":"section","stylesheet":"slider-11-cards.css","javascript":"slider-11-cards.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"Accessibility label","default":"Featured products"},{"type":"select","id":"collection_source","label":"Product source","options":[{"value":"all","label":"All products"},{"value":"selected","label":"Selected collection"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"Collection"},{"type":"select","id":"products_display_mode","label":"Products to show","options":[{"value":"limited","label":"Set number"},{"value":"all","label":"Maximum supported"}],"default":"limited"},{"type":"range","id":"products_limit","label":"Number of products","min":3,"max":10,"step":1,"default":6},{"type":"text","id":"section_height","label":"Section height","default":"700px"},{"type":"header","content":"Text and Button Styling"},{"type":"color","id":"text_color","label":"Text color"},{"type":"text","id":"text_font_size","label":"Text font size","info":"Use a CSS size, for example 18px or 1.2rem."},{"type":"color","id":"button_color","label":"Button color"},{"type":"color","id":"button_text_color","label":"Button text color"},{"type":"text","id":"button_font_size","label":"Button font size","info":"Use a CSS size, for example 16px or 1rem."}]}{%endschema%}

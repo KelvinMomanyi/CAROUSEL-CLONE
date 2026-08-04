@@ -1,0 +1,44 @@
+{%- assign s=block.settings -%}
+{%assign c = s.collection%}
+<section
+class="ms-section"
+style="--ms-bg: {{s.background_color}}; --ms-text: {{s.text_color}}; --ms-accent: {{s.accent_color}}; --ms-padding: {{s.vertical_padding}}px; --ms-radius: {{s.card_radius}}px;"
+{{block.shopify_attributes}}
+>
+<div class="ms-story" tabindex="0">
+<article class="ms-story__intro">
+{%if s.eyebrow != blank%}<p class="ms-section__eyebrow">{{s.eyebrow}}</p>{%endif%}
+<h2>{{s.heading}}</h2>
+{%if s.description != blank%}<p>{{s.description}}</p>{%endif%}
+</article>
+{%if c != blank and c.products_count > 0%}
+{%for p in c.products limit: s.product_limit%}
+<article class="ms-story__chapter">
+{%if p.featured_image%}
+{{p.featured_image|image_url: width: 1600|image_tag: loading: 'lazy', widths: '600, 900, 1200, 1600', sizes: '(min-width: 750px) 70vw, 88vw', alt: p.featured_image.alt|default: p.title}}
+{%else%}
+{{'product-'|append: forloop.index|placeholder_svg_tag}}
+{%endif%}
+<div class="ms-story__caption">
+<div>
+<h3>{{p.title}}</h3>
+<p>{{p.price|money}}</p>
+</div>
+<a class="ms-button" href="{{p.url}}">{{s.button_label}}</a>
+</div>
+</article>
+{%endfor%}
+{%else%}
+{%for index in (1..4)%}
+<article class="ms-story__chapter">
+{{'product-'|append: index|placeholder_svg_tag}}
+<div class="ms-story__caption">
+<div><h3>{{'motion.story_chapter'|t: number: index}}</h3><p>{{4900|money}}</p></div>
+<span class="ms-button">{{s.button_label}}</span>
+</div>
+</article>
+{%endfor%}
+{%endif%}
+</div>
+</section>
+{%schema%}{"name":"Horizontal product story","target":"section","stylesheet":"motion-sections.css","settings":[{"type":"collection","id":"collection","label":"Collection"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Chapter one"},{"type":"text","id":"heading","label":"Heading","default":"A collection with a point of view"},{"type":"textarea","id":"description","label":"Description","default":"Move sideways through a story built from the products, textures and details that make this edit distinct."},{"type":"text","id":"button_label","label":"Button label","default":"Explore piece"},{"type":"range","id":"product_limit","label":"Story chapters","min":2,"max":8,"step":1,"default":5},{"type":"range","id":"card_radius","label":"Corner radius","min":0,"max":40,"step":2,"unit":"px","default":24},{"type":"range","id":"vertical_padding","label":"Vertical padding","min":24,"max":120,"step":4,"unit":"px","default":72},{"type":"color","id":"background_color","label":"Background","default":"#e9e7df"},{"type":"color","id":"text_color","label":"Text","default":"#171820"},{"type":"color","id":"accent_color","label":"Accent","default":"#5750b8"}]}{%endschema%}

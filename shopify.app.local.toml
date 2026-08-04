@@ -1,0 +1,21 @@
+# Localhost-only development configuration.
+# Webhook subscriptions are intentionally omitted because Shopify cannot
+# deliver app webhooks to a localhost URL.
+
+client_id = "b2d6a4d64a315ae3403fc12c5058f85e"
+application_url = "https://example.com"
+embedded = true
+name = "Carousel-CLONE"
+
+[access_scopes]
+scopes = ""
+
+[webhooks]
+api_version = "2025-10"
+
+[auth]
+redirect_urls = [ "https://example.com/api/auth" ]
+
+[build]
+include_config_on_deploy = false
+automatically_update_urls_on_dev = true

@@ -1,0 +1,64 @@
+{
+  "motion": {
+    "previous": "Previous",
+    "next": "Next",
+    "view_product": "View {{ product }}",
+    "sale": "Sale",
+    "shop_product": "Shop {{ product }}",
+    "testimonial": "Testimonial {{ number }}",
+    "image_comparison": "Drag to compare images",
+    "before": "Before",
+    "after": "After",
+    "sample_product": "Sample product {{ number }}",
+    "story_chapter": "Story chapter {{ number }}"
+  },
+  "blocks": {
+    "product_slideshow": {
+      "aria_label": "Product slideshow",
+      "status": "Product __CURRENT__ of __TOTAL__",
+      "added": "Added to cart",
+      "add_to_cart": "Add to cart",
+      "adding": "Adding…",
+      "add_error": "Unable to add this item.",
+      "focus_product": "Focus {{ product }}",
+      "focus_sample": "Focus sample product {{ number }}",
+      "product_images": "{{ product }} images",
+      "show_image": "Show image {{ number }} for {{ product }}",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "previous": "Previous product",
+      "next": "Next product"
+    }
+  },
+  "carousel": {
+    "billing": {
+      "pro_required": "This carousel layout requires the Pro plan.",
+      "upgrade_help": "Upgrade the app plan to preview and publish this layout."
+    },
+    "empty": {
+      "collection": "Choose a product source with at least one available product."
+    },
+    "actions": {
+      "add_to_cart": "Add to cart",
+      "choose_options": "Choose options",
+      "sold_out": "Sold out",
+      "view_product": "View product"
+    },
+    "controls": {
+      "previous": "Previous product",
+      "next": "Next product",
+      "close": "Close product details",
+      "group": "Carousel controls"
+    },
+    "product": {
+      "details": "Details",
+      "price": "Price",
+      "vendor": "Vendor",
+      "type": "Type",
+      "default_type": "Product",
+      "status": "Status",
+      "in_stock": "In stock",
+      "link": "Link"
+    }
+  }
+}
