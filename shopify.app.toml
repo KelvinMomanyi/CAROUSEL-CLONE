@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b2d6a4d64a315ae3403fc12c5058f85e"
-application_url = "https://example.com"
+application_url = "https://carousel-clone.vercel.app/"
 embedded = true
 name = "Carousel-CLONE"
 
