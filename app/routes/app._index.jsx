@@ -261,11 +261,23 @@ function createThemeEditorLink({ shop, apiKey, blockHandle, template }) {
 }
 
 function ComponentPreview({ component, expanded }) {
+  if (expanded) {
+    return (
+      <div className="motion-preview-iframe-wrapper" aria-label={`Live preview: ${component.name}`}>
+        <iframe
+          src={`/preview/${component.handle}`}
+          title={`Live preview: ${component.name}`}
+          className="motion-preview-iframe"
+          loading="eager"
+          sandbox="allow-scripts allow-same-origin"
+        />
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`motion-preview motion-preview--${component.preview} motion-preview--${component.palette} ${
-        expanded ? "is-expanded" : ""
-      }`}
+      className={`motion-preview motion-preview--${component.preview} motion-preview--${component.palette}`}
       aria-hidden="true"
     >
       <span className="motion-preview__glow" />
