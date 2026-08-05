@@ -3,15 +3,13 @@ assign has_product = false
 assign button_label = block.settings.button_label
 if button_label == blank
 assign button_label = 'blocks.product_slideshow.add_to_cart'|t
-end
-if
+endif
 if product != blank
 assign has_product = true
 assign selected_variant = product.selected_or_first_available_variant
 assign featured_image = selected_variant.featured_image|default: product.featured_image
 assign featured_alt = featured_image.alt|default: product.title
-end
-if
+endif
 %}<article
 class="pss__slide{%if has_product == false%} pss__slide--placeholder{%endif%}"
 data-slide
