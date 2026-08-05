@@ -1,0 +1,86 @@
+❌ Error
+20:26:15 │          carousel-sliders │ └  [blocks/infinite_marquee.liquid] Liquid syntax error     
+(line 2): Unexpected character = in "c=s.collectionif s.direction =='right'assign
+marquee_direction='reverse'elseassign marquee_direction='normal'endif"
+20:26:15 │          carousel-sliders │ └  [blocks/product-slideshow.liquid] Liquid syntax error    
+(line 2): Unexpected character = in "c=s.collectionassign m=s.product_limitassign
+ms=s.transition_duration|times:100"
+20:26:15 │          carousel-sliders │ └  [blocks/product_coverflow.liquid] Liquid syntax error    
+(line 2): Unexpected character = in "c=s.collectionassign product_limit=s.product_limitassign      
+focus_scale=s.focus_scale|divided_by:100.0assign rotation_speed=s.rotation_speed|divided_by:100.0if
+ c != blank and c.products_count > 0assign
+visible_count=c.products_count|at_most:product_limitelseassign visible_count=6endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slide11.liquid] Liquid syntax error (line 2):    
+Unexpected character = in "id='slider-13-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:8assign 
+d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:10endif"
+20:26:15 │          carousel-sliders │ └  [blocks/shoppable_gallery.liquid] Liquid syntax error    
+(line 2): Unexpected character = in "index ==1assign gallery_image=s.image_1assign
+gallery_product=s.products[0]assign hotspot_x=s.hotspot_x_1assign hotspot_y=s.hotspot_y_1elsif     
+index ==2assign gallery_image=s.image_2assign gallery_product=s.products[1]assign
+hotspot_x=s.hotspot_x_2assign hotspot_y=s.hotspot_y_2elseassign gallery_image=s.image_3assign      
+gallery_product=s.products[2]assign hotspot_x=s.hotspot_x_3assign hotspot_y=s.hotspot_y_3endif"    
+20:26:15 │          carousel-sliders │ └  [blocks/slide12.liquid] Liquid syntax error (line 2):    
+Unexpected character = in "s=block.settingsassign c=blankif s.collection_source =='selected'assign 
+c=s.selected_collectionelseassign c=collections.allendifassign
+n=s.products_limit|default:8|at_most:16assign id='shv-modern-'|append:block.id"
+20:26:15 │          carousel-sliders │ └  [blocks/slide2.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "id='slider-03-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:6assign 
+d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:12endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slide4.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "id='slider-06-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:3assign 
+d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:8endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slide5.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "id='slider-07-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:10assign
+ d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:16endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slide7.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "id='slider-09-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:3assign 
+d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:8endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slide8.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "id='slider-10-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:3assign 
+d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:8endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slide9.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "id='slider-11-'|append:block.idif s.collection_source =='selected'assign
+ c=s.selected_collectionelseassign c=collections.allendifassign m=s.products_limit|default:6assign 
+d=s.products_display_mode|default:'limited'assign n=mif d =='all'assign
+n=c.products_count|default:c.products.size|at_most:10endif"
+20:26:15 │          carousel-sliders │ └  [blocks/slider.liquid] Liquid syntax error (line 2):     
+Unexpected character = in "s = block.settingsassign c = blankif s.collection_source ==
+'selected'assign c = s.selected_collectionelseassign c = collections.allendifassign n =
+s.products_limit | default: 8 | at_least: 2 | at_most: 16assign count = c.products_count | default:
+ 0 | at_most: nassign id = 'shv-carousel-' | append: block.idassign label = s.accessibility_label |
+ stripif label == blankassign label = 'blocks.product_slideshow.aria_label' | tendifassign
+status_template = 'blocks.product_slideshow.status' | t"
+20:26:15 │          carousel-sliders │ └  [blocks/testimonials.liquid] Liquid syntax error (line   
+2): Unexpected character = in "index ==1assign quote=s.quote_1assign author=s.author_1elsif index  
+==2assign quote=s.quote_2assign author=s.author_2elseassign quote=s.quote_3assign
+author=s.author_3endif"
+20:26:15 │          carousel-sliders │ └  [snippets/carousel-responsive-variables.liquid] Liquid   
+syntax error (line 2): Unexpected character = in "image = c.products.first.featured_imageassign    
+ratio = '16/9'assign fit = 'cover'if image and image.height > 0assign w = image.width|times:       
+1.0assign h = image.height|times: 1.0assign r = w|divided_by: h|round: 2if r >= 1.7 and r <=       
+1.8assign ratio = '16/9'elsif r >= 1.3 and r <= 1.4assign ratio = '4/3'elsif r >= 1.4 and r <=     
+1.6assign ratio = '3/2'elsif r >= 0.9 and r <= 1.1assign ratio = '1/1'elsif r >= 0.55 and r <=     
+0.58assign ratio = '9/16'assign fit = 'contain'elsif r >= 0.74 and r <= 0.76assign ratio =
+'3/4'assign fit = 'contain'elseassign ratio = image.width|append: '/'|append: image.heightif r <   
+0.8assign fit = 'contain'endifendifendif"
+
+─────────────────────────────────────────────────────────────────────────────────────────
+│ (d) Dev status │ (a) App info │ (s) Store info │                               (q) Quit
+
+ ❌ Error updating dev preview
+
+╭─ error ──────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  Failed to start dev preview.                                    

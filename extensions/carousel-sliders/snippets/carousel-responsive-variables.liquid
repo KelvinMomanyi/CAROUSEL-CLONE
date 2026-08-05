@@ -1,2 +1,29 @@
 {%doc%}Responsive carousel variables.@param {object} s - Settings.@param {object} c - Collection.{%enddoc%}{%liquid
-assign image = c.products.first.featured_imageassign ratio = '16/9'assign fit = 'cover'if image and image.height > 0assign w = image.width|times: 1.0assign h = image.height|times: 1.0assign r = w|divided_by: h|round: 2if r >= 1.7 and r <= 1.8assign ratio = '16/9'elsif r >= 1.3 and r <= 1.4assign ratio = '4/3'elsif r >= 1.4 and r <= 1.6assign ratio = '3/2'elsif r >= 0.9 and r <= 1.1assign ratio = '1/1'elsif r >= 0.55 and r <= 0.58assign ratio = '9/16'assign fit = 'contain'elsif r >= 0.74 and r <= 0.76assign ratio = '3/4'assign fit = 'contain'elseassign ratio = image.width|append: '/'|append: image.heightif r < 0.8assign fit = 'contain'endifendifendif%}--section-height: {{s.section_height}}px;--gradient-start: {{s.gradient_color_start|default: '#f1683a'}};--gradient-end: {{s.gradient_color_end|default: '#8a2be2'}};--gradient-border-radius: {{s.gradient_border_radius}}px;--shv-aspect-large: {%if s.aspect_ratio_large == 'auto'%}{{ratio}}{%else%}{{s.aspect_ratio_large}}{%endif%};--shv-fit-large: {{s.image_fit_large|default: fit}};--shv-aspect-medium: {%if s.aspect_ratio_medium == 'auto'%}{{ratio}}{%else%}{{s.aspect_ratio_medium}}{%endif%};--shv-fit-medium: {{s.image_fit_medium|default: fit}};--shv-aspect-small: {%if s.aspect_ratio_small == 'auto'%}{{ratio}}{%else%}{{s.aspect_ratio_small}}{%endif%};--shv-fit-small: {{s.image_fit_small|default: fit}};{%if s.custom_title_size != blank%}--custom-title-size: {{s.custom_title_size|escape}};{%endif%}{%if s.custom_subtitle_size != blank%}--custom-subtitle-size: {{s.custom_subtitle_size|escape}};{%endif%}{%if s.custom_price_size != blank%}--custom-price-size: {{s.custom_price_size|escape}};{%endif%}{%if s.custom_button_size != blank%}--custom-button-size: {{s.custom_button_size|escape}};{%endif%}
+assign image = c.products.first.featured_image
+assign ratio = '16/9'
+assign fit = 'cover'
+if image and image.height > 0
+assign w = image.width|times: 1.0
+assign h = image.height|times: 1.0
+assign r = w|divided_by: h|round: 2
+if r >= 1.7 and r <= 1.8
+assign ratio = '16/9'
+elsif r >= 1.3 and r <= 1.4
+assign ratio = '4/3'
+elsif r >= 1.4 and r <= 1.6
+assign ratio = '3/2'
+elsif r >= 0.9 and r <= 1.1
+assign ratio = '1/1'
+elsif r >= 0.55 and r <= 0.58
+assign ratio = '9/16'
+assign fit = 'contain'
+elsif r >= 0.74 and r <= 0.76
+assign ratio = '3/4'
+assign fit = 'contain'
+else
+assign ratio = image.width|append: '/'|append: image.height
+if r < 0.8
+assign fit = 'contain'
+endif
+endif
+endif%}--section-height: {{s.section_height}}px;--gradient-start: {{s.gradient_color_start|default: '#f1683a'}};--gradient-end: {{s.gradient_color_end|default: '#8a2be2'}};--gradient-border-radius: {{s.gradient_border_radius}}px;--shv-aspect-large: {%if s.aspect_ratio_large == 'auto'%}{{ratio}}{%else%}{{s.aspect_ratio_large}}{%endif%};--shv-fit-large: {{s.image_fit_large|default: fit}};--shv-aspect-medium: {%if s.aspect_ratio_medium == 'auto'%}{{ratio}}{%else%}{{s.aspect_ratio_medium}}{%endif%};--shv-fit-medium: {{s.image_fit_medium|default: fit}};--shv-aspect-small: {%if s.aspect_ratio_small == 'auto'%}{{ratio}}{%else%}{{s.aspect_ratio_small}}{%endif%};--shv-fit-small: {{s.image_fit_small|default: fit}};{%if s.custom_title_size != blank%}--custom-title-size: {{s.custom_title_size|escape}};{%endif%}{%if s.custom_subtitle_size != blank%}--custom-subtitle-size: {{s.custom_subtitle_size|escape}};{%endif%}{%if s.custom_price_size != blank%}--custom-price-size: {{s.custom_price_size|escape}};{%endif%}{%if s.custom_button_size != blank%}--custom-button-size: {{s.custom_button_size|escape}};{%endif%}
