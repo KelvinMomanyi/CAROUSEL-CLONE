@@ -1,12 +1,3 @@
-{%doc%}
-Renders one interactive product slide or a theme-editor placeholder.
-
-@param {block} block - The Product Slideshow app block.
-@param {number} index - Zero-based slide index.
-@param {product} [product] - Product to render.
-@param {number} [placeholder_number] - Placeholder image number.
-{%enddoc%}
-
 {%liquid
 assign has_product = false
 assign button_label = block.settings.button_label
@@ -19,36 +10,21 @@ assign selected_variant = product.selected_or_first_available_variant
 assign featured_image = selected_variant.featured_image|default: product.featured_image
 assign featured_alt = featured_image.alt|default: product.title
 endif
-%}
-
-<article
+%}<article
 class="pss__slide{%if has_product == false%} pss__slide--placeholder{%endif%}"
 data-slide
 data-index="{{index}}"
 {%if has_product%}data-product-id="{{product.id}}"{%endif%}
->
-<button
+><button
 class="pss__image-button"
 type="button"
 data-activate
 aria-label="{%if has_product%}{{'blocks.product_slideshow.focus_product'|t: product: product.title|escape}}{%else%}{{'blocks.product_slideshow.focus_sample'|t: number: placeholder_number|escape}}{%endif%}"
->
-<span class="pss__image-frame">
-{%if has_product and featured_image != blank%}
+><span class="pss__image-frame">{%if has_product and featured_image != blank%}
 {{featured_image|image_url: width: 1200|image_tag: class: 'pss__image', loading: 'lazy', widths: '240, 360, 480, 720, 960, 1200', sizes: '(min-width: 750px) 360px, 58vw', alt: featured_alt}}
-{%else%}
-{%assign placeholder_name = 'product-'|append: placeholder_number%}
+{%else%}{%assign placeholder_name = 'product-'|append: placeholder_number%}
 {{placeholder_name|placeholder_svg_tag: 'pss__image pss__placeholder'}}
-{%endif%}
-</span>
-</button>
-
-{%if has_product and block.settings.show_thumbnails and product.media.size > 1%}
-<div class="pss__thumbnails" data-thumbnails aria-label="{{'blocks.product_slideshow.product_images'|t: product: product.title|escape}}">
-{%for media in product.media limit: block.settings.thumbnail_limit%}
-{%if media.media_type == 'image'%}
-{%assign thumbnail_alt = media.alt|default: product.title%}
-<button
+{%endif%}</span></button>{%if has_product and block.settings.show_thumbnails and product.media.size > 1%}<div class="pss__thumbnails" data-thumbnails aria-label="{{'blocks.product_slideshow.product_images'|t: product: product.title|escape}}">{%for media in product.media limit: block.settings.thumbnail_limit%}{%if media.media_type == 'image'%}{%assign thumbnail_alt = media.alt|default: product.title%}<button
 class="pss__thumbnail{%if media.id == featured_image.id%} is-active{%endif%}"
 type="button"
 data-thumbnail
@@ -58,38 +34,7 @@ aria-label="{{'blocks.product_slideshow.show_image'|t: number: forloop.index, pr
 aria-pressed="{%if media.id == featured_image.id%}true{%else%}false{%endif%}"
 >
 {{media|image_url: width: 128|image_tag: loading: 'lazy', widths: '64, 96, 128', sizes: '64px', alt: thumbnail_alt}}
-</button>
-{%endif%}
-{%endfor%}
-</div>
-{%endif%}
-
-{%if has_product%}
-<div class="pss__details" data-details>
-<div class="pss__copy">
-<h3 class="pss__title"><a href="{{product.url}}">{{product.title}}</a></h3>
-{%if product.description != blank%}
-<p class="pss__description">{{product.description|strip_html|truncatewords: 28}}</p>
-{%endif%}
-<p class="pss__price-row">
-<span class="pss__price" data-price>{{selected_variant.price|money}}</span>
-<s class="pss__compare-price{%unless selected_variant.compare_at_price > selected_variant.price%} is-hidden{%endunless%}" data-compare-price>
-{%if selected_variant.compare_at_price > selected_variant.price%}{{selected_variant.compare_at_price|money}}{%endif%}
-</s>
-</p>
-</div>
-
-{%unless product.has_only_default_variant%}
-<div class="pss__variants">
-{%for option in product.options_with_values%}
-{%assign option_index = option.position|minus: 1%}
-<fieldset class="pss__option" data-option-group>
-<legend class="pss__option-name">{{option.name}}</legend>
-<div class="pss__option-values">
-{%for value in option.values%}
-{%assign option_value_text = value.name|default: value%}
-{%assign input_id = 'Pss-'|append: block.id|append: '-'|append: product.id|append: '-'|append: option.position|append: '-'|append: forloop.index%}
-<input
+</button>{%endif%}{%endfor%}</div>{%endif%}{%if has_product%}<div class="pss__details" data-details><div class="pss__copy"><h3 class="pss__title"><a href="{{product.url}}">{{product.title}}</a></h3>{%if product.description != blank%}<p class="pss__description">{{product.description|strip_html|truncatewords: 28}}</p>{%endif%}<p class="pss__price-row"><span class="pss__price" data-price>{{selected_variant.price|money}}</span><s class="pss__compare-price{%unless selected_variant.compare_at_price > selected_variant.price%} is-hidden{%endunless%}" data-compare-price>{%if selected_variant.compare_at_price > selected_variant.price%}{{selected_variant.compare_at_price|money}}{%endif%}</s></p></div>{%unless product.has_only_default_variant%}<div class="pss__variants">{%for option in product.options_with_values%}{%assign option_index = option.position|minus: 1%}<fieldset class="pss__option" data-option-group><legend class="pss__option-name">{{option.name}}</legend><div class="pss__option-values">{%for value in option.values%}{%assign option_value_text = value.name|default: value%}{%assign input_id = 'Pss-'|append: block.id|append: '-'|append: product.id|append: '-'|append: option.position|append: '-'|append: forloop.index%}<input
 class="visually-hidden"
 id="{{input_id}}"
 type="radio"
@@ -97,45 +42,21 @@ name="PssOption-{{block.id}}-{{product.id}}-{{option.position}}"
 value="{{option_value_text|escape}}"
 {%if selected_variant.options[option_index] == option_value_text%}checked{%endif%}
 data-option-input
->
-<label class="pss__option-value" for="{{input_id}}">{{option_value_text}}</label>
-{%endfor%}
-</div>
-</fieldset>
-{%endfor%}
-</div>
-{%endunless%}
-
-{%if block.settings.button_behavior == 'product_page'%}
-<a class="pss__button pss__button--{{block.settings.button_style}}" href="{{product.url}}">
+><label class="pss__option-value" for="{{input_id}}">{{option_value_text}}</label>{%endfor%}</div></fieldset>{%endfor%}</div>{%endunless%}{%if block.settings.button_behavior == 'product_page'%}<a class="pss__button pss__button--{{block.settings.button_style}}" href="{{product.url}}">
 {{button_label}}
-</a>
-{%else%}
-{%form 'product', product, class: 'pss__form', data-product-form: ''%}
-<input type="hidden" name="id" value="{{selected_variant.id}}" data-variant-id>
-<input type="hidden" name="quantity" value="1">
-<button
+</a>{%else%}{%form 'product', product, class: 'pss__form', data-product-form: ''%}<input type="hidden" name="id" value="{{selected_variant.id}}" data-variant-id><input type="hidden" name="quantity" value="1"><button
 class="pss__button pss__button--{{block.settings.button_style}}"
 type="submit"
 data-add-button
 data-default-label="{{button_label|escape}}"
 {%unless selected_variant.available%}disabled{%endunless%}
->
-<span data-button-label>
-{%if selected_variant.available%}
+><span data-button-label>{%if selected_variant.available%}
 {{button_label}}
 {%else%}
 {{'blocks.product_slideshow.sold_out'|t}}
-{%endif%}
-</span>
-</button>
-{%endform%}
-{%endif%}
-
-<script type="application/json" data-variants>
+{%endif%}</span></button>{%endform%}{%endif%}<script type="application/json" data-variants>
 [
-{%for variant in product.variants%}
-{%assign variant_image_alt = variant.featured_image.alt|default: product.title%}
+{%for variant in product.variants%}{%assign variant_image_alt = variant.featured_image.alt|default: product.title%}
 {
 "id": {{variant.id|json}},
 "available": {{variant.available|json}},
@@ -144,11 +65,6 @@ data-default-label="{{button_label|escape}}"
 "compareAtPrice": {%if variant.compare_at_price > variant.price%}{{variant.compare_at_price|money|json}}{%else%}null{%endif%},
 "imageUrl": {%if variant.featured_image%}{{variant.featured_image|image_url: width: 1200|json}}{%else%}null{%endif%},
 "imageAlt": {%if variant.featured_image%}{{variant_image_alt|json}}{%else%}null{%endif%}
-}{%unless forloop.last%},{%endunless%}
-{%endfor%}
+}{%unless forloop.last%},{%endunless%}{%endfor%}
 ]
-</script>
-<span class="visually-hidden" data-product-message aria-live="polite"></span>
-</div>
-{%endif%}
-</article>
+</script><span class="visually-hidden" data-product-message aria-live="polite"></span></div>{%endif%}</article>

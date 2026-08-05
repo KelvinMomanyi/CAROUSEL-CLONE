@@ -543,7 +543,17 @@
 
 .shv-main-slider .buttons form { display: contents; }
 .shv-main-slider :is(button, a):focus-visible { outline: 3px solid var(--theme-accent, #f1683a); outline-offset: 3px; }
+.shv-main-slider .shv-carousel-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 @media (prefers-reduced-motion: reduce) {
   .shv-main-slider *, .shv-main-slider *::before, .shv-main-slider *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
-

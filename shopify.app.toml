@@ -1,16 +1,29 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b2d6a4d64a315ae3403fc12c5058f85e"
-application_url = "https://carousel-clone.vercel.app/"
+client_id = "e3c6df0e7669a438f16b27083aa321d0"
+application_url = "https://carouselslider-sandy.vercel.app/"
 embedded = true
-name = "Carousel-CLONE"
+name = "Carousel Slider"
+handle = "slide-extension"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = ""
+scopes = "read_products,write_products"
 
 [webhooks]
-api_version = "2025-10"
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/privacy"
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/shop/update"
+  topics = [ "shop/update" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/subscription"
+  topics = [ "app_subscriptions/update" ]
 
   [[webhooks.subscriptions]]
   uri = "/webhooks/app/uninstalled"
@@ -21,8 +34,20 @@ api_version = "2025-10"
   topics = [ "app/scopes_update" ]
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://carouselslider-sandy.vercel.app/auth/callback",
+  "https://carouselslider-sandy.vercel.app/auth/shopify/callback",
+  "https://carouselslider-sandy.vercel.app/api/auth/callback"
+]
+
+[app_proxy]
+url = "https://carouselslider-sandy.vercel.app/proxy"
+subpath = "carousel"
+prefix = "apps"
 
 [build]
 include_config_on_deploy = true
 automatically_update_urls_on_dev = true
+
+[pos]
+embedded = false

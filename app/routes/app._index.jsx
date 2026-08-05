@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useMemo, useState } from "react";
 import { useLoaderData } from "react-router";
-import { boundary } from "@shopify/shopify-app-react-router/server";
-import { authenticate } from "../shopify.server";
+import {
+  getBillingConfig,
+  hasPremiumFeatureAccess,
+  requireBilling,
+} from "../utils/billing.server";
 import libraryStyles from "../styles/motion-library.css?url";
 
 export const links = () => [{ rel: "stylesheet", href: libraryStyles }];
@@ -240,13 +243,29 @@ const components = [
 
 const categories = ["All", "Carousels", "Heroes", "Products", "Galleries", "Conversion"];
 
+const liveBlockHandles = {
+  carousel_slider: "slider",
+  carousel_aerphone: "slide2",
+  carousel_swift: "slide4",
+  carousel_orbit_ring: "slide5",
+  carousel_elegance: "slide7",
+  carousel_vanish: "slide8",
+  carousel_coverflow: "slide9",
+  carousel_card_stack: "slide11",
+  carousel_modern: "slide12",
+};
+
 export const loader = async ({ request }) => {
-  const { session } = await authenticate.admin(request);
+  const { session, billing } = await requireBilling(request);
 
   return {
+    // @ts-ignore -- process is provided by the Node server runtime.
     // eslint-disable-next-line no-undef
     apiKey: process.env.SHOPIFY_API_KEY || "",
     shop: session.shop,
+    billing,
+    billingConfig: getBillingConfig(),
+    isPro: hasPremiumFeatureAccess(billing),
   };
 };
 
@@ -260,51 +279,66 @@ function createThemeEditorLink({ shop, apiKey, blockHandle, template }) {
   return `https://${shop}/admin/themes/current/editor?${params.toString()}`;
 }
 
-function ComponentPreview({ component, expanded }) {
-  if (expanded) {
-    return (
-      <div className="motion-preview-iframe-wrapper" aria-label={`Live preview: ${component.name}`}>
-        <iframe
-          src={`/preview/${component.handle}`}
-          title={`Live preview: ${component.name}`}
-          className="motion-preview-iframe"
-          loading="eager"
-          sandbox="allow-scripts allow-same-origin"
-        />
-      </div>
-    );
-  }
-
+function ComponentPreview({ component }) {
   return (
-    <div
-      className={`motion-preview motion-preview--${component.preview} motion-preview--${component.palette}`}
-      aria-hidden="true"
-    >
-      <span className="motion-preview__glow" />
-      <span className="motion-preview__copy motion-preview__copy--short" />
-      <span className="motion-preview__copy" />
-      <div className="motion-preview__stage">
-        <span className="motion-preview__tile motion-preview__tile--one" />
-        <span className="motion-preview__tile motion-preview__tile--two" />
-        <span className="motion-preview__tile motion-preview__tile--three" />
-      </div>
-      <span className="motion-preview__pill">Live motion</span>
+    <div className="motion-card-preview">
+      <iframe
+        src={`/preview/${component.handle}`}
+        title={`${component.name} interactive preview`}
+        className="motion-card-preview__frame"
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin"
+      />
     </div>
   );
 }
 
-function ComponentCard({ component, template, shop, apiKey, onPreview, expanded }) {
+function PreviewModal({ component, onAfterHide }) {
+  return (
+    <s-modal
+      id="component-preview-modal"
+      heading={component ? `${component.name} preview` : "Component preview"}
+      accessibilityLabel={component ? `${component.name} full-size preview` : "Component preview"}
+      size="large-100"
+      padding="none"
+      onAfterHide={onAfterHide}
+    >
+      {component && (
+        <div className="motion-modal-preview">
+          <iframe
+            key={component.handle}
+            src={`/preview/${component.handle}`}
+            title={`${component.name} full-size interactive preview`}
+            className="motion-modal-preview__frame"
+            loading="eager"
+            sandbox="allow-scripts allow-same-origin"
+          />
+        </div>
+      )}
+      <s-button
+        slot="secondary-actions"
+        command="--hide"
+        commandFor="component-preview-modal"
+      >
+        Close
+      </s-button>
+    </s-modal>
+  );
+}
+
+function ComponentCard({ component, template, shop, apiKey, isPro, onPreview }) {
   const supported = component.templates.includes(template);
+  const locked = component.access === "Pro" && !isPro;
   const editorUrl = createThemeEditorLink({
     shop,
     apiKey,
-    blockHandle: component.handle,
+    blockHandle: liveBlockHandles[component.handle] || component.handle,
     template,
   });
 
   return (
-    <article className={`component-card ${expanded ? "is-expanded" : ""}`}>
-      <ComponentPreview component={component} expanded={expanded} />
+    <article className="component-card">
+      <ComponentPreview component={component} />
       <div className="component-card__body">
         <div className="component-card__title-row">
           <div>
@@ -331,17 +365,27 @@ function ComponentCard({ component, template, shop, apiKey, onPreview, expanded 
             Choose a supported page to add this component.
           </div>
         )}
+        {locked && (
+          <div className="component-card__notice component-card__notice--locked" role="status">
+            Upgrade to Pro to add this component to your theme.
+          </div>
+        )}
         <div className="component-card__actions">
-          <s-button variant="secondary" onClick={() => onPreview(component.handle)}>
-            {expanded ? "Close preview" : "Preview"}
+          <s-button
+            variant="secondary"
+            command="--show"
+            commandFor="component-preview-modal"
+            onClick={() => onPreview(component.handle)}
+          >
+            Preview
           </s-button>
           <s-button
             variant="primary"
-            href={editorUrl}
+            href={locked ? "/app/pricing" : editorUrl}
             target="_top"
             disabled={!supported || !apiKey}
           >
-            Add to theme
+            {locked ? "Upgrade to Pro" : "Add to theme"}
           </s-button>
         </div>
       </div>
@@ -350,7 +394,7 @@ function ComponentCard({ component, template, shop, apiKey, onPreview, expanded 
 }
 
 export default function Index() {
-  const { apiKey, shop } = useLoaderData();
+  const { apiKey, shop, billing, billingConfig, isPro } = useLoaderData();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [template, setTemplate] = useState("index");
@@ -374,17 +418,38 @@ export default function Index() {
 
   const selectedTemplate = templates.find((item) => item.value === template)?.label;
 
-  const togglePreview = (handle) => {
-    setPreview((current) => (current === handle ? null : handle));
-  };
+  const previewComponent = components.find((component) => component.handle === preview) || null;
 
   return (
     <s-page heading="Motion sections">
       <s-button slot="primary-action" href="/app/additional">
         Theme setup
       </s-button>
+      <s-button slot="secondary-actions" href="/app/pricing">
+        Pricing
+      </s-button>
+
+      <PreviewModal component={previewComponent} onAfterHide={() => setPreview(null)} />
 
       <div className="library-shell">
+        {billing.isDevStore ? (
+          <s-banner heading="Development store" tone="info">
+            All Pro components are unlocked while this store is on a Shopify development plan.
+          </s-banner>
+        ) : billing.hasActiveSubscription ? (
+          <s-banner heading="Pro Plan active" tone="success">
+            All motion sections are unlocked for this store.
+          </s-banner>
+        ) : billing.isTrialActive ? (
+          <s-banner heading={`Pro trial: ${billing.trialDaysRemaining} days remaining`} tone="info">
+            All Pro components are unlocked during your {billingConfig.trialDays}-day trial. <s-link href="/app/pricing">View pricing</s-link>
+          </s-banner>
+        ) : (
+          <s-banner heading="Free Plan" tone="info">
+            Free components remain available. <s-link href="/app/pricing">Upgrade to Pro</s-link> to unlock the complete library.
+          </s-banner>
+        )}
+
         <section className="library-hero" aria-labelledby="library-title">
           <div>
             <span className="library-hero__kicker">Storefront motion, made native</span>
@@ -418,7 +483,6 @@ export default function Index() {
               value={template}
               onChange={(event) => {
                 setTemplate(event.currentTarget.value);
-                setPreview(null);
               }}
             >
               {templates.map((item) => (
@@ -439,7 +503,6 @@ export default function Index() {
               aria-pressed={category === item}
               onClick={() => {
                 setCategory(item);
-                setPreview(null);
               }}
             >
               {item}
@@ -466,8 +529,8 @@ export default function Index() {
                 template={template}
                 shop={shop}
                 apiKey={apiKey}
-                expanded={preview === component.handle}
-                onPreview={togglePreview}
+                isPro={isPro}
+                onPreview={setPreview}
               />
             ))}
           </div>
@@ -503,4 +566,3 @@ export default function Index() {
   );
 }
 
-export const headers = (headersArgs) => boundary.headers(headersArgs);

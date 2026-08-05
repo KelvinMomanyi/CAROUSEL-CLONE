@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+/* eslint-disable no-undef */
+
 const MIME = {
   css: "text/css; charset=utf-8",
   js: "application/javascript; charset=utf-8",

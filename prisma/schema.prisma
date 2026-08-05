@@ -9,26 +9,90 @@ generator client {
 // enough when changing adapters.
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
-  provider = "sqlite"
-  url      = "file:dev.sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Session {
-  id            String    @id
-  shop          String
-  state         String
-  isOnline      Boolean   @default(false)
-  scope         String?
-  expires       DateTime?
-  accessToken   String
-  userId        BigInt?
-  firstName     String?
-  lastName      String?
-  email         String?
-  accountOwner  Boolean   @default(false)
-  locale        String?
-  collaborator  Boolean?  @default(false)
-  emailVerified Boolean?  @default(false)
-  refreshToken        String?
-  refreshTokenExpires DateTime?
+  id                    String    @id
+  shop                  String
+  state                 String
+  isOnline              Boolean   @default(false)
+  scope                 String?
+  expires               DateTime?
+  accessToken           String
+  userId                BigInt?
+  firstName             String?
+  lastName              String?
+  email                 String?
+  accountOwner          Boolean   @default(false)
+  locale                String?
+  collaborator          Boolean?  @default(false)
+  emailVerified         Boolean?  @default(false)
+  refreshToken          String?
+  refreshTokenExpires   DateTime?
+  refreshTokenExpiresAt DateTime?
+}
+
+model Shop {
+  id                    String    @id @default(uuid())
+  shop                  String    @unique
+  installDate           DateTime  @default(now())
+  trialEndsAt           DateTime?
+  plan                  String?
+  isDevStore            Boolean   @default(false)
+  hasActiveSubscription Boolean   @default(false)
+  gracePeriodEndsAt     DateTime?
+  lastCheckedAt         DateTime  @default(now())
+  accessToken           String?
+  shopifyPlanName       String?
+  subscriptionId        String?
+  currentPlan           String    @default("free")
+  uninstalledAt         DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model AffiliateReferral {
+  id            String    @id @default(uuid())
+  affiliateCode String
+  shop          String?   @unique
+  pendingShop   String?   @unique
+  status        String    @default("pending")
+  firstSeenAt   DateTime  @default(now())
+  lastSeenAt    DateTime  @default(now())
+  installedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([affiliateCode])
+  @@index([status])
+  @@index([installedAt])
+}
+
+model CarouselEvent {
+  id        String   @id @default(uuid())
+  shop      String
+  blockName String
+  eventType String
+  productId String?
+  variantId String?
+  pageUrl   String?
+  createdAt DateTime @default(now())
+
+  @@index([shop, createdAt])
+  @@index([shop, blockName, eventType])
+}
+
+model CarouselDailySummary {
+  id          String   @id @default(uuid())
+  shop        String
+  date        DateTime @db.Date
+  blockName   String
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  addToCarts  Int      @default(0)
+
+  @@unique([shop, date, blockName])
+  @@index([shop, date])
 }

@@ -1,15 +1,22 @@
 import { redirect, Form, useLoaderData } from "react-router";
 import { login } from "../../shopify.server";
+import { captureAffiliateReferral } from "../../utils/affiliate-referral.server";
 import styles from "./styles.module.css";
 
 export const loader = async ({ request }) => {
   const url = new URL(request.url);
+  const referral = await captureAffiliateReferral(request);
 
   if (url.searchParams.get("shop")) {
-    throw redirect(`/app?${url.searchParams.toString()}`);
+    throw redirect(`/app?${url.searchParams.toString()}`, {
+      headers: referral.headers,
+    });
   }
 
-  return { showForm: Boolean(login) };
+  return Response.json(
+    { showForm: Boolean(login) },
+    { headers: referral.headers },
+  );
 };
 
 export default function App() {

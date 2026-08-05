@@ -18,6 +18,8 @@ export default function App() {
       <s-app-nav>
         <s-link href="/app">Component library</s-link>
         <s-link href="/app/additional">Theme setup</s-link>
+        <s-link href="/app/pricing">Pricing</s-link>
+        <s-link href="/app/support">Support</s-link>
       </s-app-nav>
       <Outlet />
     </AppProvider>

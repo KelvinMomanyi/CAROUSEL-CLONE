@@ -165,16 +165,20 @@ function sliderMain(products) {
     .join("");
 
   return `
-<div
+<section
   id="shv-carousel-demo"
   class="shv-main-slider shv-gradient-enabled shv-gradient-rounded"
   data-shv-main-slider
   data-carousel-root
   data-carousel-layout="slider-main"
+  data-carousel-block-id="demo"
+  data-carousel-count="${products.length}"
+  data-carousel-status-template="Product __CURRENT__ of __TOTAL__"
   style="--theme-accent:#f1683a;--theme-text:#ffffff;--theme-bg:#111418;--section-height:700px;"
   role="region"
   aria-roledescription="carousel"
   aria-label="Featured products"
+  aria-busy="false"
 >
   <div class="shv-slider-track" aria-live="polite">${slides}</div>
   <div class="shv-slider-thumbs" aria-hidden="true">${thumbs}</div>
@@ -183,7 +187,8 @@ function sliderMain(products) {
     <button type="button" class="shv-nav-next" aria-label="Next">&#8250;</button>
   </div>
   <div class="slider-progress" aria-hidden="true"></div>
-</div>`;
+  <span class="shv-carousel-status" data-carousel-status aria-live="polite" aria-atomic="true"></span>
+</section>`;
 }
 
 /** carousel_modern — slider-12.css / slider-12.js */
@@ -534,7 +539,7 @@ function sliderVanish(products) {
 function sliderCoverflow(products) {
   const items = products
     .map(
-      (p, i) => `
+      (p) => `
   <article class="item" style="background-image:url('${p.image}');" data-carousel-slide>
     <div class="content">
       <div class="name">${p.title}</div>
@@ -632,6 +637,7 @@ function sliderCardStack(products) {
 /** product-slideshow — product-slideshow.css / product-slideshow.js */
 function sliderProductSlideshow(products) {
   const slides = products
+    .slice(0, 6)
     .map(
       (p, i) => `
   <article class="pss__slide" data-slide data-index="${i}" data-product-id="${p.id}">
@@ -640,6 +646,36 @@ function sliderProductSlideshow(products) {
         <img src="${p.portrait}" class="pss__image" alt="${p.title}" loading="${i === 0 ? "eager" : "lazy"}" width="700" height="900">
       </span>
     </button>
+    <div class="pss__thumbnails" data-thumbnails aria-label="Product images for ${p.title}">
+      <button class="pss__thumbnail is-active" type="button" data-thumbnail data-image-url="${p.portrait}" data-image-alt="${p.title}" aria-label="Show image 1 for ${p.title}" aria-pressed="true">
+        <img src="${p.thumb}" alt="${p.title}" loading="lazy" width="128" height="128">
+      </button>
+      <button class="pss__thumbnail" type="button" data-thumbnail data-image-url="${p.square}" data-image-alt="${p.title}" aria-label="Show image 2 for ${p.title}" aria-pressed="false">
+        <img src="${p.square}" alt="${p.title}" loading="lazy" width="128" height="128">
+      </button>
+      <button class="pss__thumbnail" type="button" data-thumbnail data-image-url="${p.image}" data-image-alt="${p.title}" aria-label="Show image 3 for ${p.title}" aria-pressed="false">
+        <img src="${p.image}" alt="${p.title}" loading="lazy" width="128" height="128">
+      </button>
+    </div>
+    <div class="pss__details" data-details>
+      <div class="pss__copy">
+        <h3 class="pss__title"><a href="#">${p.title}</a></h3>
+        <p class="pss__description">${p.description}</p>
+        <p class="pss__price-row">
+          <span class="pss__price" data-price>${p.price}</span>
+          <s class="pss__compare-price${p.comparePrice ? "" : " is-hidden"}" data-compare-price>${p.comparePrice || ""}</s>
+        </p>
+      </div>
+      <form class="pss__form" data-product-form>
+        <input type="hidden" name="id" value="${p.id}" data-variant-id>
+        <input type="hidden" name="quantity" value="1">
+        <button class="pss__button pss__button--primary" type="submit" data-add-button data-default-label="Add to cart">
+          <span data-button-label>Add to cart</span>
+        </button>
+      </form>
+      <script type="application/json" data-variants>[{"id":${p.id},"available":true,"options":["Default Title"],"price":"${p.price}","compareAtPrice":${p.comparePrice ? `"${p.comparePrice}"` : "null"},"imageUrl":"${p.portrait}","imageAlt":"${p.title}"}]</script>
+      <span class="visually-hidden" data-product-message aria-live="polite"></span>
+    </div>
   </article>`
     )
     .join("");
@@ -651,13 +687,13 @@ function sliderProductSlideshow(products) {
   data-initial-index="-1"
   data-autoplay="0"
   data-focus-width="200"
-  data-image-height="280"
-  data-gap="18"
+  data-image-height="250"
+  data-gap="16"
   data-max-scale="200"
   data-size-decrement="15"
   data-hover-scale="105"
-  data-inactive-opacity="25"
-  data-hover-sibling-opacity="55"
+  data-inactive-opacity="20"
+  data-hover-sibling-opacity="50"
   data-details-inset="20"
   data-status-template="Showing {product}"
   data-added-label="Added"
@@ -666,34 +702,34 @@ function sliderProductSlideshow(products) {
   data-sold-out-label="Sold out"
   data-unavailable-label="Unavailable"
   style="
-    --pss-background:#f8f7f4;
-    --pss-text:#1a1a1a;
-    --pss-muted:#888888;
-    --pss-backdrop:#e8e4df;
-    --pss-backdrop-size:140px;
-    --pss-stage-height:660px;
-    --pss-image-height:280px;
+    --pss-background:#ffffff;
+    --pss-text:#000000;
+    --pss-muted:#575757;
+    --pss-backdrop:#f0f0f0;
+    --pss-backdrop-size:120px;
+    --pss-stage-height:640px;
+    --pss-image-height:250px;
     --pss-focus-width:200px;
-    --pss-gap:18px;
-    --pss-radius:12px;
+    --pss-gap:16px;
+    --pss-radius:8px;
     --pss-transition:500ms;
-    --pss-easing:cubic-bezier(0.22,1,0.36,1);
-    --pss-thumbnail-size:36px;
+    --pss-easing:ease-in-out;
+    --pss-thumbnail-size:32px;
     --pss-thumbnail-gap:8px;
-    --pss-thumbnail-radius:6px;
+    --pss-thumbnail-radius:4px;
     --pss-thumbnail-opacity:0.5;
-    --pss-details-width:320px;
-    --pss-details-background:rgba(255,255,255,0.85);
-    --pss-details-padding:24px;
-    --pss-details-gap:18px;
-    --pss-details-radius:16px;
-    --pss-variant-text:#999999;
-    --pss-variant-border:#cccccc;
-    --pss-variant-active-text:#1a1a1a;
-    --pss-variant-active-border:#1a1a1a;
-    --pss-button-background:#1a1a1a;
+    --pss-details-width:300px;
+    --pss-details-background:transparent;
+    --pss-details-padding:20px;
+    --pss-details-gap:20px;
+    --pss-details-radius:8px;
+    --pss-variant-text:#bcb7c9;
+    --pss-variant-border:#bcb7c9;
+    --pss-variant-active-text:#ffffff;
+    --pss-variant-active-border:#000000;
+    --pss-button-background:transparent;
     --pss-button-text:#ffffff;
-    --pss-button-border:#1a1a1a;
+    --pss-button-border:#000000;
     --pss-button-hover-background:#333333;
     --pss-button-hover-text:#ffffff;
   "
@@ -703,10 +739,6 @@ function sliderProductSlideshow(products) {
     <div class="pss__viewport" data-viewport tabindex="0">
       <div class="pss__track" data-track>${slides}</div>
     </div>
-    <div class="pss__controls">
-      <button class="pss__arrow pss__arrow--previous" type="button" data-previous aria-label="Previous">&#8592;</button>
-      <button class="pss__arrow pss__arrow--next" type="button" data-next aria-label="Next">&#8594;</button>
-    </div>
     <p class="pss__status visually-hidden" data-status aria-live="polite"></p>
   </section>
 </carousel-product-slideshow>`;
@@ -715,43 +747,52 @@ function sliderProductSlideshow(products) {
 /** product_coverflow — motion-sections.css / motion-sections.js */
 function sliderProductCoverflow(products) {
   const cards = products
+    .slice(0, 6)
     .map(
-      (p) => `
-  <div data-coverflow-card>
-    <article class="ms-product-card">
-      <a class="ms-product-card__link" href="#" aria-label="${p.title}">
-        <div class="ms-product-card__media">
-          <img src="${p.portrait}" alt="${p.title}" loading="lazy" width="700" height="900" style="width:100%;height:100%;object-fit:cover;">
-        </div>
-        <div class="ms-product-card__meta">
-          <h3 class="ms-product-card__title">${p.title}</h3>
-          <p class="ms-product-card__price">${p.price}</p>
-        </div>
-      </a>
-    </article>
-  </div>`
+      (p, i) => `
+  <article class="ms-helix__card" data-helix-card data-title="${p.title}" role="group" aria-label="${i + 1} of 6: ${p.title}" aria-hidden="${i === 0 ? "false" : "true"}">
+    <a class="ms-helix__link" href="#" tabindex="${i === 0 ? "0" : "-1"}">
+      <span class="ms-helix__media">
+        <img src="${p.portrait}" alt="${p.title}" loading="lazy" width="700" height="900">
+      </span>
+      <span class="ms-helix__title">${p.title}</span>
+    </a>
+  </article>`
     )
     .join("");
 
   return `
 <section
-  class="ms-section"
-  style="--ms-bg:#1d1725;--ms-text:#f6f0ff;--ms-accent:#c8a7ff;--ms-padding:72px;--ms-radius:24px;"
+  class="ms-section ms-section--helix"
+  style="--ms-helix-height:560px;--ms-helix-card-w:190px;--ms-helix-card-h:250px;--ms-helix-radius:240px;--ms-helix-perspective:1400px;--ms-helix-card-radius:18px;--ms-helix-edge-fade:22%;--ms-helix-bg:#0A0A10;--ms-helix-text:#FFFFFF;--ms-helix-accent:#8C6BFF;--ms-helix-title-size:14px;"
 >
-  <div class="ms-section__header">
-    <div>
-      <p class="ms-section__eyebrow">Centre stage</p>
-      <h2 class="ms-section__heading">Meet the icons</h2>
-      <p class="ms-section__copy">A dimensional showcase for the products that define your collection.</p>
-    </div>
-  </div>
-  <motion-coverflow class="ms-coverflow" data-autoplay="5">
-    <div class="ms-coverflow__stage">${cards}</div>
-    <div class="ms-coverflow__controls">
-      <button class="ms-icon-button" type="button" data-coverflow-previous aria-label="Previous">&#8592;</button>
-      <button class="ms-icon-button" type="button" data-coverflow-next aria-label="Next">&#8594;</button>
-    </div>
-  </motion-coverflow>
+  <motion-helix-spiral
+    class="ms-helix"
+    data-arc-span="360"
+    data-radius="240"
+    data-path-spacing="42"
+    data-perspective="1400"
+    data-card-width="190"
+    data-card-height="250"
+    data-focus-scale="1.2"
+    data-focus-falloff="3"
+    data-depth-blur="6"
+    data-scroll-behavior="wheel"
+    data-scroll-loops="1"
+    data-auto-rotation="true"
+    data-rotation-speed="0.18"
+    data-reverse="false"
+    data-drag-swipe="true"
+    data-scroll-control="true"
+    data-card-count="6"
+    tabindex="0"
+    role="region"
+    aria-roledescription="carousel"
+    aria-label="Featured products"
+  >
+    <div class="ms-helix__stage" data-helix-stage>${cards}</div>
+    <span class="ms-sr-only" data-helix-status aria-live="polite"></span>
+  </motion-helix-spiral>
 </section>`;
 }
 
@@ -817,36 +858,34 @@ function sliderMarquee(products) {
 
 /** product_story — motion-sections.css (scroll-driven horizontal story) */
 function sliderProductStory(products) {
-  const chapters = products
-    .slice(0, 5)
+  const cards = products
+    .slice(0, 6)
     .map(
       (p, i) => `
-  <article class="ms-story__chapter">
-    <img src="${p.image}" loading="${i === 0 ? "eager" : "lazy"}" width="1400" height="900" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;">
-    <div class="ms-story__caption">
-      <div>
-        <h3>${p.title}</h3>
-        <p>${p.price}</p>
-      </div>
-      <a class="ms-button" href="#">Explore piece</a>
-    </div>
+  <article class="ms-depth-story__card" data-depth-card data-caption="${p.title}" aria-hidden="${i === 0 ? "false" : "true"}">
+    <a class="ms-depth-story__link" href="#" tabindex="${i === 0 ? "0" : "-1"}">
+      <img src="${p.image}" loading="lazy" width="1200" height="772" alt="${p.title}">
+      <span class="ms-depth-story__reflection" aria-hidden="true">
+        <img src="${p.image}" loading="lazy" width="1200" height="772" alt="">
+      </span>
+    </a>
   </article>`
     )
     .join("");
 
   return `
 <section
-  class="ms-section"
-  style="--ms-bg:#e9e7df;--ms-text:#171820;--ms-accent:#5750b8;--ms-padding:72px;--ms-radius:24px;"
+  class="ms-section ms-section--depth-story"
+  style="--ms-bg:#ECE5D8;--ms-text:#161413;--ms-padding:0px;--ms-depth-height:560px;--ms-depth-card-w:460px;--ms-depth-card-h:300px;--ms-depth-side-scale:0.66;--ms-depth-spacing:40px;--ms-depth:150px;--ms-depth-curve:42deg;--ms-depth-perspective:1300px;--ms-depth-stiffness:170;--ms-depth-damping:34;--ms-depth-radius:6px;--ms-depth-blur:5px;--ms-depth-reflect:0.3;--ms-depth-vignette:0%;--ms-depth-edge-width:22px;--ms-depth-edge-blur:14px;"
 >
-  <div class="ms-story" tabindex="0">
-    <article class="ms-story__intro">
-      <p class="ms-section__eyebrow">Chapter one</p>
-      <h2>A collection with a point of view</h2>
-      <p>Move sideways through a story built from the products, textures and details that make this edit distinct.</p>
-    </article>
-    ${chapters}
-  </div>
+  <motion-depth-story class="ms-depth-story" data-hint="Scroll / Drag" aria-roledescription="carousel" aria-label="Horizontal product story">
+    <div class="ms-depth-story__stage" data-depth-stage>${cards}</div>
+    <div class="ms-depth-story__vignette" aria-hidden="true"></div>
+    <p class="ms-depth-story__meta" data-depth-meta aria-live="polite">
+      <span data-depth-caption></span><span class="ms-depth-story__counter" data-depth-counter></span>
+    </p>
+    <p class="ms-sr-only" data-depth-hint>Scroll / Drag</p>
+  </motion-depth-story>
 </section>`;
 }
 
@@ -1038,13 +1077,13 @@ const CONFIGS = {
   "product-slideshow": {
     css: "product-slideshow.css",
     js: "product-slideshow.js",
-    bg: "#f8f7f4",
+    bg: "#ffffff",
     render: (p) => sliderProductSlideshow(p),
   },
   product_coverflow: {
     css: "motion-sections.css",
-    js: "motion-sections.js",
-    bg: "#1d1725",
+    js: "motion-helix.js",
+    bg: "#0A0A10",
     render: (p) => sliderProductCoverflow(p),
   },
   animated_hero: {
@@ -1061,8 +1100,8 @@ const CONFIGS = {
   },
   product_story: {
     css: "motion-sections.css",
-    js: null,
-    bg: "#e9e7df",
+    js: "motion-depth-story.js",
+    bg: "#ECE5D8",
     render: (p) => sliderProductStory(p),
   },
   shoppable_gallery: {
@@ -1132,7 +1171,8 @@ function buildPreviewHtml(handle) {
     form[data-slider-13-cart-form] button,
     form.item__cart-form button,
     form.active-product-form button,
-    form.addToCartForm button { pointer-events: none; }
+    form.addToCartForm button,
+    form[data-product-form] button { pointer-events: none; }
     /* Smooth image loading */
     img { display: block; max-width: 100%; }
   </style>
