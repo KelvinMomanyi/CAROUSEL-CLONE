@@ -1,150 +1,60 @@
-{% render 'analytics' %}
-{%- assign s = block.settings -%}
-{% liquid
-  assign c = s.collection
-  assign m = s.product_limit
-  assign ms = s.transition_duration | times: 100
-%}
+{%-assign s=block.settings-%}
+{%liquid
+assign c=s.collection
+assign m=s.product_limit
+assign ms=s.transition_duration|times:100%}
 <carousel-product-slideshow
-  id="ProductSlideshow-{{ block.id }}"
-  class="pss"
-  data-carousel-root
-  data-carousel-layout="product-slideshow"
-  data-carousel-block-id="{{ block.id }}"
-  data-initial-index="-1"
-  data-autoplay="{{ s.autoplay_speed }}"
-  data-focus-width="{{ s.focus_image_width }}"
-  data-image-height="{{ s.image_height }}"
-  data-gap="{{ s.card_gap }}"
-  data-max-scale="{{ s.max_scale }}"
-  data-size-decrement="{{ s.size_decrement }}"
-  data-hover-scale="{{ s.hover_scale }}"
-  data-inactive-opacity="{{ s.inactive_opacity }}"
-  data-hover-sibling-opacity="{{ s.hover_sibling_opacity }}"
-  data-details-inset="{{ s.details_offset }}"
-  data-status-template="{{ 'blocks.product_slideshow.status' | t | escape }}"
-  data-added-label="{{ 'blocks.product_slideshow.added' | t | escape }}"
-  data-adding-label="{{ 'blocks.product_slideshow.adding' | t | escape }}"
-  data-error-label="{{ 'blocks.product_slideshow.add_error' | t | escape }}"
-  data-sold-out-label="{{ 'blocks.product_slideshow.sold_out' | t | escape }}"
-  data-unavailable-label="{{ 'blocks.product_slideshow.unavailable' | t | escape }}"
-  style="--pss-background: {{ s.background_color }}; --pss-text: {{ s.text_color }}; --pss-muted: {{ s.muted_text_color }}; --pss-backdrop: {{ s.backdrop_color }}; --pss-backdrop-size: {{ s.backdrop_size }}px; --pss-stage-height: {{ s.stage_height }}px; --pss-image-height: {{ s.image_height }}px; --pss-focus-width: {{ s.focus_image_width }}px; --pss-gap: {{ s.card_gap }}px; --pss-radius: {{ s.card_radius }}px; --pss-transition: {{ ms }}ms; --pss-easing: {{ s.easing }}; --pss-thumbnail-size: {{ s.thumbnail_size }}px; --pss-thumbnail-gap: {{ s.thumbnail_gap }}px; --pss-thumbnail-radius: {{ s.thumbnail_radius }}px; --pss-thumbnail-opacity: {{ s.thumbnail_opacity | divided_by: 100.0 }}; --pss-details-width: {{ s.details_width }}px; --pss-details-background: {{ s.details_background }}; --pss-details-padding: {{ s.details_padding }}px; --pss-details-gap: {{ s.details_gap }}px; --pss-details-radius: {{ s.details_radius }}px; --pss-variant-text: {{ s.variant_text_color }}; --pss-variant-border: {{ s.variant_border_color }}; --pss-variant-active-text: {{ s.variant_active_text_color }}; --pss-variant-active-border: {{ s.variant_active_border_color }}; --pss-button-background: {{ s.button_background }}; --pss-button-text: {{ s.button_text_color }}; --pss-button-border: {{ s.button_border_color }}; --pss-button-hover-background: {{ s.button_hover_background }}; --pss-button-hover-text: {{ s.button_hover_text_color }};"
-  {{ block.shopify_attributes }}
+id="ProductSlideshow-{{block.id}}"
+class="pss"
+data-initial-index="-1"
+data-autoplay="{{s.autoplay_speed}}"
+data-focus-width="{{s.focus_image_width}}"
+data-image-height="{{s.image_height}}"
+data-gap="{{s.card_gap}}"
+data-max-scale="{{s.max_scale}}"
+data-size-decrement="{{s.size_decrement}}"
+data-hover-scale="{{s.hover_scale}}"
+data-inactive-opacity="{{s.inactive_opacity}}"
+data-hover-sibling-opacity="{{s.hover_sibling_opacity}}"
+data-details-inset="{{s.details_offset}}"
+data-status-template="{{'blocks.product_slideshow.status'|t|escape}}"
+data-added-label="{{'blocks.product_slideshow.added'|t|escape}}"
+data-adding-label="{{'blocks.product_slideshow.adding'|t|escape}}"
+data-error-label="{{'blocks.product_slideshow.add_error'|t|escape}}"
+data-sold-out-label="{{'blocks.product_slideshow.sold_out'|t|escape}}"
+data-unavailable-label="{{'blocks.product_slideshow.unavailable'|t|escape}}"
+style="--pss-background: {{s.background_color}}; --pss-text: {{s.text_color}}; --pss-muted: {{s.muted_text_color}}; --pss-backdrop: {{s.backdrop_color}}; --pss-backdrop-size: {{s.backdrop_size}}px; --pss-stage-height: {{s.stage_height}}px; --pss-image-height: {{s.image_height}}px; --pss-focus-width: {{s.focus_image_width}}px; --pss-gap: {{s.card_gap}}px; --pss-radius: {{s.card_radius}}px; --pss-transition: {{ms}}ms; --pss-easing: {{s.easing}}; --pss-thumbnail-size: {{s.thumbnail_size}}px; --pss-thumbnail-gap: {{s.thumbnail_gap}}px; --pss-thumbnail-radius: {{s.thumbnail_radius}}px; --pss-thumbnail-opacity: {{s.thumbnail_opacity|divided_by:100.0}}; --pss-details-width: {{s.details_width}}px; --pss-details-background: {{s.details_background}}; --pss-details-padding: {{s.details_padding}}px; --pss-details-gap: {{s.details_gap}}px; --pss-details-radius: {{s.details_radius}}px; --pss-variant-text: {{s.variant_text_color}}; --pss-variant-border: {{s.variant_border_color}}; --pss-variant-active-text: {{s.variant_active_text_color}}; --pss-variant-active-border: {{s.variant_active_border_color}}; --pss-button-background: {{s.button_background}}; --pss-button-text: {{s.button_text_color}}; --pss-button-border: {{s.button_border_color}}; --pss-button-hover-background: {{s.button_hover_background}}; --pss-button-hover-text: {{s.button_hover_text_color}};"
+{{block.shopify_attributes}}
 >
-  <section class="pss__section" aria-label="{{ 'blocks.product_slideshow.aria_label' | t | escape }}">
-    {% if s.backdrop_title != blank %}
-      <div class="pss__backdrop" aria-hidden="true">{{ s.backdrop_title }}</div>
-    {% endif %}
-    <div class="pss__viewport" data-viewport tabindex="0">
-      <div class="pss__track" data-track>
-        {% if c != blank and c.products_count > 0 %}
-          {% for p in c.products limit: m %}
-            {% render 'product-slideshow-card', product: p, block: block, index: forloop.index0 %}
-          {% endfor %}
-        {% else %}
-          {% for index in (1..3) %}
-            {% assign zero_index = forloop.index0 %}
-            {% render 'product-slideshow-card', block: block, index: zero_index, placeholder_number: index %}
-          {% endfor %}
-        {% endif %}
-      </div>
-    </div>
-    {% if s.show_arrows %}
-      <div class="pss__controls">
-        <button class="pss__arrow pss__arrow--previous" type="button" data-previous aria-label="{{ 'blocks.product_slideshow.previous' | t | escape }}">
-          <span aria-hidden="true">&#8592;</span>
-        </button>
-        <button class="pss__arrow pss__arrow--next" type="button" data-next aria-label="{{ 'blocks.product_slideshow.next' | t | escape }}">
-          <span aria-hidden="true">&#8594;</span>
-        </button>
-      </div>
-    {% endif %}
-    <p class="pss__status visually-hidden" data-status aria-live="polite"></p>
-  </section>
+<section class="pss__section" aria-label="{{'blocks.product_slideshow.aria_label'|t|escape}}">
+{%if s.backdrop_title != blank%}
+<div class="pss__backdrop" aria-hidden="true">{{s.backdrop_title}}</div>
+{%endif%}
+<div class="pss__viewport" data-viewport tabindex="0">
+<div class="pss__track" data-track>
+{%if c != blank and c.products_count > 0%}
+{%for p in c.products limit:m%}
+{%render 'product-slideshow-card',product:p,block:block,index:forloop.index0%}
+{%endfor%}
+{%else%}
+{%for index in (1..3)%}
+{%assign zero_index=forloop.index0%}
+{%render 'product-slideshow-card',block:block,index:zero_index,placeholder_number:index%}
+{%endfor%}
+{%endif%}
+</div>
+</div>
+{%if s.show_arrows%}
+<div class="pss__controls">
+<button class="pss__arrow pss__arrow--previous" type="button" data-previous aria-label="{{'blocks.product_slideshow.previous'|t|escape}}">
+<span aria-hidden="true">&#8592;</span>
+</button>
+<button class="pss__arrow pss__arrow--next" type="button" data-next aria-label="{{'blocks.product_slideshow.next'|t|escape}}">
+<span aria-hidden="true">&#8594;</span>
+</button>
+</div>
+{%endif%}
+<p class="pss__status visually-hidden" data-status aria-live="polite"></p>
+</section>
 </carousel-product-slideshow>
-{% schema %}
-{
-  "name": "t:fd",
-  "target": "section",
-  "stylesheet": "product-slideshow.css",
-  "javascript": "product-slideshow.js",
-  "settings": [
-    { "type": "collection", "id": "collection", "label": "t:ab" },
-    { "type": "range", "id": "product_limit", "label": "t:ew", "min": 3, "max": 12, "step": 1, "default": 6 },
-    { "type": "text", "id": "backdrop_title", "label": "t:fe", "default": "t:ff" },
-    { "type": "checkbox", "id": "show_details", "label": "t:fg", "default": true },
-    { "type": "checkbox", "id": "show_thumbnails", "label": "t:fh", "default": true },
-    { "type": "range", "id": "thumbnail_limit", "label": "t:fi", "min": 2, "max": 8, "step": 1, "default": 5 },
-    { "type": "checkbox", "id": "show_arrows", "label": "t:fj", "default": false },
-    { "type": "range", "id": "autoplay_speed", "label": "t:fk", "info": "t:fl", "min": 0, "max": 10, "step": 1, "unit": "s", "default": 0 },
-    { "type": "range", "id": "stage_height", "label": "t:fm", "min": 400, "max": 800, "step": 20, "unit": "px", "default": 640 },
-    { "type": "range", "id": "focus_image_width", "label": "t:fn", "min": 140, "max": 360, "step": 10, "unit": "px", "default": 200 },
-    { "type": "range", "id": "image_height", "label": "t:fo", "min": 160, "max": 500, "step": 10, "unit": "px", "default": 250 },
-    { "type": "range", "id": "max_scale", "label": "t:fp", "min": 110, "max": 200, "step": 5, "unit": "%", "default": 200 },
-    { "type": "range", "id": "size_decrement", "label": "t:fq", "min": 0, "max": 40, "step": 1, "unit": "%", "default": 15 },
-    { "type": "range", "id": "hover_scale", "label": "t:fr", "min": 100, "max": 115, "step": 1, "unit": "%", "default": 105 },
-    { "type": "range", "id": "inactive_opacity", "label": "t:fs", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 20 },
-    { "type": "range", "id": "hover_sibling_opacity", "label": "t:ft", "min": 10, "max": 100, "step": 5, "unit": "%", "default": 50 },
-    { "type": "range", "id": "card_gap", "label": "t:fb", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 16 },
-    { "type": "range", "id": "card_radius", "label": "t:fu", "min": 0, "max": 32, "step": 2, "unit": "px", "default": 8 },
-    { "type": "range", "id": "transition_duration", "label": "t:fv", "info": "t:fw", "min": 2, "max": 15, "step": 1, "default": 5 },
-    {
-      "type": "select",
-      "id": "easing",
-      "label": "Easing",
-      "options": [
-        { "value": "ease-in-out", "label": "t:fy" },
-        { "value": "ease", "label": "Ease" },
-        { "value": "linear", "label": "Linear" }
-      ],
-      "default": "ease-in-out"
-    },
-    { "type": "range", "id": "backdrop_size", "label": "t:gb", "min": 48, "max": 180, "step": 4, "unit": "px", "default": 120 },
-    { "type": "color", "id": "background_color", "label": "t:bs", "default": "#ffffff" },
-    { "type": "color", "id": "backdrop_color", "label": "Backdrop", "default": "#f0f0f0" },
-    { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },
-    { "type": "color", "id": "muted_text_color", "label": "t:gd", "default": "#575757" },
-    { "type": "range", "id": "thumbnail_size", "label": "t:ge", "min": 24, "max": 64, "step": 4, "unit": "px", "default": 32 },
-    { "type": "range", "id": "thumbnail_gap", "label": "t:gf", "min": 4, "max": 20, "step": 2, "unit": "px", "default": 8 },
-    { "type": "range", "id": "thumbnail_radius", "label": "t:gg", "min": 0, "max": 16, "step": 1, "unit": "px", "default": 4 },
-    { "type": "range", "id": "thumbnail_opacity", "label": "t:gh", "min": 20, "max": 100, "step": 5, "unit": "%", "default": 50 },
-    { "type": "range", "id": "details_width", "label": "t:gi", "min": 220, "max": 420, "step": 10, "unit": "px", "default": 300 },
-    { "type": "color", "id": "details_background", "label": "t:gj", "default": "transparent" },
-    { "type": "range", "id": "details_offset", "label": "t:gk", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 20 },
-    { "type": "range", "id": "details_padding", "label": "t:gl", "min": 0, "max": 40, "step": 4, "unit": "px", "default": 20 },
-    { "type": "range", "id": "details_gap", "label": "t:gm", "min": 8, "max": 32, "step": 2, "unit": "px", "default": 20 },
-    { "type": "range", "id": "details_radius", "label": "t:gn", "min": 0, "max": 32, "step": 2, "unit": "px", "default": 8 },
-    { "type": "color", "id": "variant_text_color", "label": "t:go", "default": "#bcb7c9" },
-    { "type": "color", "id": "variant_border_color", "label": "t:gp", "default": "#bcb7c9" },
-    { "type": "color", "id": "variant_active_text_color", "label": "t:gq", "default": "#ffffff" },
-    { "type": "color", "id": "variant_active_border_color", "label": "t:gr", "default": "#000000" },
-    { "type": "text", "id": "button_label", "label": "t:gs", "default": "t:gt" },
-    {
-      "type": "select",
-      "id": "button_behavior",
-      "label": "t:gu",
-      "options": [
-        { "value": "add_to_cart", "label": "t:gv" },
-        { "value": "product_page", "label": "t:gw" }
-      ],
-      "default": "add_to_cart"
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "label": "t:gx",
-      "options": [
-        { "value": "primary", "label": "Primary" },
-        { "value": "secondary", "label": "Secondary" },
-        { "value": "tertiary", "label": "Tertiary" }
-      ],
-      "default": "primary"
-    },
-    { "type": "color", "id": "button_background", "label": "t:hb", "default": "transparent" },
-    { "type": "color", "id": "button_text_color", "label": "t:bw", "default": "#ffffff" },
-    { "type": "color", "id": "button_border_color", "label": "t:hc", "default": "#000000" },
-    { "type": "color", "id": "button_hover_background", "label": "t:hd", "default": "#333333" },
-    { "type": "color", "id": "button_hover_text_color", "label": "t:he", "default": "#ffffff" }
-  ]
-}
-{% endschema %}
+{%schema%}{"name":"t:fd","target":"section","stylesheet":"product-slideshow.css","javascript":"product-slideshow.js","settings":[{"type":"collection","id":"collection","label":"t:ab"},{"type":"range","id":"product_limit","label":"t:ew","min":3,"max":12,"step":1,"default":6},{"type":"text","id":"backdrop_title","label":"t:fe","default":"t:ff"},{"type":"checkbox","id":"show_details","label":"t:fg","default":true},{"type":"checkbox","id":"show_thumbnails","label":"t:fh","default":true},{"type":"range","id":"thumbnail_limit","label":"t:fi","min":2,"max":8,"step":1,"default":5},{"type":"checkbox","id":"show_arrows","label":"t:fj","default":false},{"type":"range","id":"autoplay_speed","label":"t:fk","info":"t:fl","min":0,"max":10,"step":1,"unit":"s","default":0},{"type":"range","id":"stage_height","label":"t:fm","min":400,"max":800,"step":20,"unit":"px","default":640},{"type":"range","id":"focus_image_width","label":"t:fn","min":140,"max":360,"step":10,"unit":"px","default":200},{"type":"range","id":"image_height","label":"t:fo","min":160,"max":500,"step":10,"unit":"px","default":250},{"type":"range","id":"max_scale","label":"t:fp","min":110,"max":200,"step":5,"unit":"%","default":200},{"type":"range","id":"size_decrement","label":"t:fq","min":0,"max":40,"step":1,"unit":"%","default":15},{"type":"range","id":"hover_scale","label":"t:fr","min":100,"max":115,"step":1,"unit":"%","default":105},{"type":"range","id":"inactive_opacity","label":"t:fs","min":0,"max":100,"step":5,"unit":"%","default":20},{"type":"range","id":"hover_sibling_opacity","label":"t:ft","min":10,"max":100,"step":5,"unit":"%","default":50},{"type":"range","id":"card_gap","label":"t:fb","min":0,"max":48,"step":2,"unit":"px","default":16},{"type":"range","id":"card_radius","label":"t:fu","min":0,"max":32,"step":2,"unit":"px","default":8},{"type":"range","id":"transition_duration","label":"t:fv","info":"t:fw","min":2,"max":15,"step":1,"default":5},{"type":"select","id":"easing","label":"Easing","options":[{"value":"ease-in-out","label":"t:fy"},{"value":"ease","label":"Ease"},{"value":"linear","label":"Linear"}],"default":"ease-in-out"},{"type":"range","id":"backdrop_size","label":"t:gb","min":48,"max":180,"step":4,"unit":"px","default":120},{"type":"color","id":"background_color","label":"t:bs","default":"#ffffff"},{"type":"color","id":"backdrop_color","label":"Backdrop","default":"#f0f0f0"},{"type":"color","id":"text_color","label":"Text","default":"#000000"},{"type":"color","id":"muted_text_color","label":"t:gd","default":"#575757"},{"type":"range","id":"thumbnail_size","label":"t:ge","min":24,"max":64,"step":4,"unit":"px","default":32},{"type":"range","id":"thumbnail_gap","label":"t:gf","min":4,"max":20,"step":2,"unit":"px","default":8},{"type":"range","id":"thumbnail_radius","label":"t:gg","min":0,"max":16,"step":1,"unit":"px","default":4},{"type":"range","id":"thumbnail_opacity","label":"t:gh","min":20,"max":100,"step":5,"unit":"%","default":50},{"type":"range","id":"details_width","label":"t:gi","min":220,"max":420,"step":10,"unit":"px","default":300},{"type":"color","id":"details_background","label":"t:gj","default":"transparent"},{"type":"range","id":"details_offset","label":"t:gk","min":0,"max":80,"step":4,"unit":"px","default":20},{"type":"range","id":"details_padding","label":"t:gl","min":0,"max":40,"step":4,"unit":"px","default":20},{"type":"range","id":"details_gap","label":"t:gm","min":8,"max":32,"step":2,"unit":"px","default":20},{"type":"range","id":"details_radius","label":"t:gn","min":0,"max":32,"step":2,"unit":"px","default":8},{"type":"color","id":"variant_text_color","label":"t:go","default":"#bcb7c9"},{"type":"color","id":"variant_border_color","label":"t:gp","default":"#bcb7c9"},{"type":"color","id":"variant_active_text_color","label":"t:gq","default":"#ffffff"},{"type":"color","id":"variant_active_border_color","label":"t:gr","default":"#000000"},{"type":"text","id":"button_label","label":"t:gs","default":"t:gt"},{"type":"select","id":"button_behavior","label":"t:gu","options":[{"value":"add_to_cart","label":"t:gv"},{"value":"product_page","label":"t:gw"}],"default":"add_to_cart"},{"type":"select","id":"button_style","label":"t:gx","options":[{"value":"primary","label":"Primary"},{"value":"secondary","label":"Secondary"},{"value":"tertiary","label":"Tertiary"}],"default":"primary"},{"type":"color","id":"button_background","label":"t:hb","default":"transparent"},{"type":"color","id":"button_text_color","label":"t:bw","default":"#ffffff"},{"type":"color","id":"button_border_color","label":"t:hc","default":"#000000"},{"type":"color","id":"button_hover_background","label":"t:hd","default":"#333333"},{"type":"color","id":"button_hover_text_color","label":"t:he","default":"#ffffff"}]}{%endschema%}
