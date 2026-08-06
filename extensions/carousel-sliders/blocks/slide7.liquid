@@ -1,4 +1,4 @@
-{% render 'analytics' %}
+{%render 'analytics'%}
 {%-assign s=block.settings-%}
 {%liquid
 assign id='slider-09-'|append:block.id
@@ -16,11 +16,7 @@ endif%}
 {%if c != blank and c.products_count > 0%}
 <div id="{{id}}" class="slider-09-root{%if s.text_color != blank%} has-slider-text-color{%endif%}{%if s.text_font_size != blank%} has-slider-text-size{%endif%}{%if s.button_color != blank%} has-slider-button-color{%endif%}{%if s.button_text_color != blank%} has-slider-button-text-color{%endif%}{%if s.button_font_size != blank%} has-slider-button-size{%endif%}" data-carousel-root data-carousel-layout="slider-09" data-carousel-block-id="{{block.id}}" role="region" aria-roledescription="carousel" aria-label="{{s.accessibility_label|escape}}" style="
 --s09-height: {{s.section_height|escape}};
-{%if s.text_color != blank%}--slider-style-text-color: {{s.text_color}};{%endif%}
-{%if s.text_font_size != blank%}--slider-style-text-size: {{s.text_font_size|escape}};{%endif%}
-{%if s.button_color != blank%}--slider-style-button-color: {{s.button_color}};{%endif%}
-{%if s.button_text_color != blank%}--slider-style-button-text-color: {{s.button_text_color}};{%endif%}
-{%if s.button_font_size != blank%}--slider-style-button-size: {{s.button_font_size|escape}};{%endif%}
+{%render 'carousel-style-vars',s:s%}
 " {{block.shopify_attributes}}>
 <div class="carousel">
 <div class="list">

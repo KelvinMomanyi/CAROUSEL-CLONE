@@ -1,4 +1,4 @@
-{% render 'analytics' %}
+{%render 'analytics'%}
 {%-assign s=block.settings-%}
 {%liquid
 assign id='slider-07-'|append:block.id
@@ -23,11 +23,7 @@ endif%}
 --3d-radius: {{s.radius_3d|default:420}}px;
 --slider-07-section-height: {{s.section_height|default:'700px'|escape}};
 {%if s.ambient_image != blank%}--slider-07-ambient-image: url({{s.ambient_image|image_url:width:2200}});{%endif%}
-{%if s.text_color != blank%}--slider-style-text-color: {{s.text_color}};{%endif%}
-{%if s.text_font_size != blank%}--slider-style-text-size: {{s.text_font_size|escape}};{%endif%}
-{%if s.button_color != blank%}--slider-style-button-color: {{s.button_color}};{%endif%}
-{%if s.button_text_color != blank%}--slider-style-button-text-color: {{s.button_text_color}};{%endif%}
-{%if s.button_font_size != blank%}--slider-style-button-size: {{s.button_font_size|escape}};{%endif%}
+{%render 'carousel-style-vars',s:s%}
 ">
 {%if s.bg_image != blank%}
 <div class="main-bg-overlay" style="background-image: url({{s.bg_image|image_url:width:2200}}); background-size: {{s.bg_image_size|default:'cover'}};"></div>

@@ -1,15 +1,9 @@
-{%doc%}
-Shared carousel markup.
-@param {object} c - Collection.
-@param {number} n - Product limit.
-@param {boolean} [modern] - Modern treatment.
-{%enddoc%}
 <div class="shv-slider-track" aria-live="polite">
 {%for product in c.products limit: n%}
-{%assign v = product.selected_or_first_available_variant%}
+{%assign v=product.selected_or_first_available_variant%}
 <article class="shv-slide" data-carousel-slide>
 {%if product.featured_image%}
-{%assign l = 'lazy'%}{%if forloop.first%}{%assign l = 'eager'%}{%endif%}
+{%assign l='lazy'%}{%if forloop.first%}{%assign l='eager'%}{%endif%}
 {{product.featured_image|image_url: width: 1800|image_tag: widths: '480, 750, 1100, 1500, 1800', sizes: '100vw', loading: l, class: 'slider-img', alt: product.featured_image.alt|default: product.title}}
 {%else%}
 {{'product-1'|placeholder_svg_tag: 'slider-img slider-img--placeholder'}}
