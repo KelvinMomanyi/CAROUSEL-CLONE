@@ -1,4 +1,6 @@
-{%render 'analytics'%}{%-assign s=block.settings-%}{%liquid
+{% render 'analytics' %}
+{%-assign s=block.settings-%}
+{%liquid
 assign id='slider-07-'|append:block.id
 if s.collection_source =='selected'
 assign c=s.selected_collection
@@ -10,4 +12,76 @@ assign d=s.products_display_mode|default:'limited'
 assign n=m
 if d =='all'
 assign n=c.products_count|default:c.products.size|at_most:16
-endif%}{%if c != blank and c.products_count > 0%}<div id="{{id}}" class="slider-07-root{%if s.text_color != blank%} has-slider-text-color{%endif%}{%if s.text_font_size != blank%} has-slider-text-size{%endif%}{%if s.button_color != blank%} has-slider-button-color{%endif%}{%if s.button_text_color != blank%} has-slider-button-text-color{%endif%}{%if s.button_font_size != blank%} has-slider-button-size{%endif%}" {{block.shopify_attributes}} data-carousel-root data-carousel-layout="slider-07" data-carousel-block-id="{{block.id}}" data-slider-07-root data-add-label="{{'carousel.actions.add_to_cart'|t|escape}}" data-sold-label="{{'carousel.actions.sold_out'|t|escape}}" data-options-label="{{'carousel.actions.choose_options'|t|escape}}" role="region" aria-roledescription="carousel" aria-label="{{s.accessibility_label|escape}}" style="--bg-color: {{s.bg_color|default:'#0b0c10'}};--bg-image-opacity: {{s.bg_image_opacity|divided_by:100.0|default:1}};--bg-image-blur: {{s.bg_image_blur|default:0}}px;--3d-perspective: {{s.perspective_3d|default:1000}}px;--3d-tilt: {{s.tilt_3d|default:-22}}deg;--3d-radius: {{s.radius_3d|default:420}}px;--slider-07-section-height: {{s.section_height|default:'700px'|escape}};{%if s.ambient_image != blank%}--slider-07-ambient-image: url({{s.ambient_image|image_url:width:2200}});{%endif%}{%if s.text_color != blank%}--slider-style-text-color: {{s.text_color}};{%endif%}{%if s.text_font_size != blank%}--slider-style-text-size: {{s.text_font_size|escape}};{%endif%}{%if s.button_color != blank%}--slider-style-button-color: {{s.button_color}};{%endif%}{%if s.button_text_color != blank%}--slider-style-button-text-color: {{s.button_text_color}};{%endif%}{%if s.button_font_size != blank%}--slider-style-button-size: {{s.button_font_size|escape}};{%endif%}">{%if s.bg_image != blank%}<div class="main-bg-overlay" style="background-image: url({{s.bg_image|image_url:width:2200}}); background-size: {{s.bg_image_size|default:'cover'}};"></div>{%endif%}<div class="banner"><div class="slider" style="--quantity: {{n}}">{%for p in c.products limit:n%}{%assign v=p.selected_or_first_available_variant%}<div class="item" style="--position: {{forloop.index}}"data-image="{%if p.featured_image%}{{p.featured_image|image_url:width:900}}{%endif%}"data-title="{{p.title|escape}}"data-price="{{v.price|money_with_currency|escape}}"data-id="{{v.id}}"data-product-id="{{p.id}}"data-available="{{v.available}}"data-has-options="{%unless p.has_only_default_variant%}true{%else%}false{%endunless%}"data-url="{{p.url}}">{%if p.featured_image%}{{p.featured_image|image_url:width:900|image_tag:widths:'180, 360, 600, 900',sizes:'200px',loading:'lazy',alt:p.featured_image.alt|default:p.title}}{%else%}{{'product-1'|placeholder_svg_tag:'product-image-placeholder'}}{%endif%}</div>{%endfor%}</div><div class="content display-content"><div class="active-product-display" id="activeDisplay-{{block.id}}">{%assign p=c.products.first%}{%assign initial_variant=p.selected_or_first_available_variant%}<button type="button" class="close-display-btn" aria-label="{{'carousel.controls.close'|t}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>{%if p.featured_image%}<img src="{{p.featured_image|image_url:width:600}}" id="activeImg-{{block.id}}" alt="{{p.title|escape}}" width="600" height="600">{%else%}<img hidden id="activeImg-{{block.id}}" alt="{{p.title|escape}}" width="600" height="600">{%endif%}<div class="active-product-placeholder"{%if p.featured_image%} hidden{%endif%}>{{'product-1'|placeholder_svg_tag:'active-product-image'}}</div><div class="product-info-panel"><h2 id="activeTitle-{{block.id}}">{{p.title}}</h2><p id="activePrice-{{block.id}}">{{initial_variant.price|money_with_currency}}</p><form action="{{routes.cart_add_url}}" method="post" id="activeForm-{{block.id}}" class="active-product-form" data-carousel-cart-form><input type="hidden" name="id" id="activeId-{{block.id}}" value="{{initial_variant.id}}"><input type="hidden" name="quantity" value="1"><button type="submit" class="btn" id="activeButton-{{block.id}}"{%unless initial_variant.available%} disabled{%endunless%}>{%if initial_variant.available%}{{'carousel.actions.add_to_cart'|t}}{%else%}{{'carousel.actions.sold_out'|t}}{%endif%}</button></form><a class="btn active-product-options" href="{{p.url}}" data-product-id="{{p.id}}" data-product-url{%if p.has_only_default_variant%} hidden{%endif%}>{{'carousel.actions.choose_options'|t}}</a><p class="add-to-cart-feedback" id="activeFeedback-{{block.id}}" aria-live="polite"></p></div></div></div></div></div>{%elsif request.design_mode%}<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>{%endif%}{%schema%}{"name":"t:db","target":"section","available_if":"{{ app.metafields.billing.pro_access }}","stylesheet":"slider-07.css","javascript":"slider-07.js","settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"select","id":"products_display_mode","label":"t:ac","options":[{"value":"limited","label":"t:ad"},{"value":"all","label":"t:ae"}],"default":"limited"},{"type":"range","id":"products_limit","label":"t:af","min":4,"max":16,"default":10},{"type":"header","content":"t:ag"},{"type":"text","id":"section_height","label":"t:s","default":"700px"},{"type":"header","content":"t:ai"},{"type":"color","id":"text_color","label":"t:aj"},{"type":"text","id":"text_font_size","label":"t:ak"},{"type":"color","id":"button_color","label":"t:am"},{"type":"color","id":"button_text_color","label":"t:an"},{"type":"text","id":"button_font_size","label":"t:ao"},{"type":"image_picker","id":"ambient_image","label":"t:dc"},{"type":"header","content":"t:dd"},{"type":"color","id":"bg_color","label":"t:de","default":"#0b0c10"},{"type":"image_picker","id":"bg_image","label":"t:df"},{"type":"select","id":"bg_image_size","label":"t:dg","options":[{"value":"cover","label":"t:bo"},{"value":"contain","label":"t:bn"},{"value":"auto","label":"Auto"}],"default":"cover"},{"type":"range","id":"bg_image_opacity","label":"t:dh","min":0,"max":100,"step":5,"default":100,"unit":"%"},{"type":"range","id":"bg_image_blur","label":"t:di","min":0,"max":50,"default":0,"unit":"px"},{"type":"header","content":"t:dj"},{"type":"range","id":"perspective_3d","label":"t:dk","min":400,"max":2000,"step":50,"default":1000,"unit":"px"},{"type":"range","id":"tilt_3d","label":"t:dl","min":-45,"max":45,"default":-22,"unit":"deg"},{"type":"range","id":"radius_3d","label":"t:dm","min":200,"max":1200,"step":10,"default":420,"unit":"px"}]}{%endschema%}
+endif%}
+{%if c != blank and c.products_count > 0%}
+<div id="{{id}}" class="slider-07-root{%if s.text_color != blank%} has-slider-text-color{%endif%}{%if s.text_font_size != blank%} has-slider-text-size{%endif%}{%if s.button_color != blank%} has-slider-button-color{%endif%}{%if s.button_text_color != blank%} has-slider-button-text-color{%endif%}{%if s.button_font_size != blank%} has-slider-button-size{%endif%}" {{block.shopify_attributes}} data-carousel-root data-carousel-layout="slider-07" data-carousel-block-id="{{block.id}}" data-slider-07-root data-add-label="{{'carousel.actions.add_to_cart'|t|escape}}" data-sold-label="{{'carousel.actions.sold_out'|t|escape}}" data-options-label="{{'carousel.actions.choose_options'|t|escape}}" role="region" aria-roledescription="carousel" aria-label="{{s.accessibility_label|escape}}" style="
+--bg-color: {{s.bg_color|default:'#0b0c10'}};
+--bg-image-opacity: {{s.bg_image_opacity|divided_by:100.0|default:1}};
+--bg-image-blur: {{s.bg_image_blur|default:0}}px;
+--3d-perspective: {{s.perspective_3d|default:1000}}px;
+--3d-tilt: {{s.tilt_3d|default:-22}}deg;
+--3d-radius: {{s.radius_3d|default:420}}px;
+--slider-07-section-height: {{s.section_height|default:'700px'|escape}};
+{%if s.ambient_image != blank%}--slider-07-ambient-image: url({{s.ambient_image|image_url:width:2200}});{%endif%}
+{%if s.text_color != blank%}--slider-style-text-color: {{s.text_color}};{%endif%}
+{%if s.text_font_size != blank%}--slider-style-text-size: {{s.text_font_size|escape}};{%endif%}
+{%if s.button_color != blank%}--slider-style-button-color: {{s.button_color}};{%endif%}
+{%if s.button_text_color != blank%}--slider-style-button-text-color: {{s.button_text_color}};{%endif%}
+{%if s.button_font_size != blank%}--slider-style-button-size: {{s.button_font_size|escape}};{%endif%}
+">
+{%if s.bg_image != blank%}
+<div class="main-bg-overlay" style="background-image: url({{s.bg_image|image_url:width:2200}}); background-size: {{s.bg_image_size|default:'cover'}};"></div>
+{%endif%}
+<div class="banner">
+<div class="slider" style="--quantity: {{n}}">
+{%for p in c.products limit:n%}
+{%assign v=p.selected_or_first_available_variant%}
+<div class="item" style="--position: {{forloop.index}}"
+data-image="{%if p.featured_image%}{{p.featured_image|image_url:width:900}}{%endif%}"
+data-title="{{p.title|escape}}"
+data-price="{{v.price|money_with_currency|escape}}"
+data-id="{{v.id}}"
+data-product-id="{{p.id}}"
+data-available="{{v.available}}"
+data-has-options="{%unless p.has_only_default_variant%}true{%else%}false{%endunless%}"
+data-url="{{p.url}}">
+{%if p.featured_image%}
+{{p.featured_image|image_url:width:900|image_tag:widths:'180, 360, 600, 900',sizes:'200px',loading:'lazy',alt:p.featured_image.alt|default:p.title}}
+{%else%}
+{{'product-1'|placeholder_svg_tag:'product-image-placeholder'}}
+{%endif%}
+</div>
+{%endfor%}
+</div>
+<div class="content display-content">
+<div class="active-product-display" id="activeDisplay-{{block.id}}">
+{%assign p=c.products.first%}
+{%assign initial_variant=p.selected_or_first_available_variant%}
+<button type="button" class="close-display-btn" aria-label="{{'carousel.controls.close'|t}}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+</button>
+{%if p.featured_image%}
+<img src="{{p.featured_image|image_url:width:600}}" id="activeImg-{{block.id}}" alt="{{p.title|escape}}" width="600" height="600">
+{%else%}
+<img hidden id="activeImg-{{block.id}}" alt="{{p.title|escape}}" width="600" height="600">
+{%endif%}
+<div class="active-product-placeholder"{%if p.featured_image%} hidden{%endif%}>{{'product-1'|placeholder_svg_tag:'active-product-image'}}</div>
+<div class="product-info-panel">
+<h2 id="activeTitle-{{block.id}}">{{p.title}}</h2>
+<p id="activePrice-{{block.id}}">{{initial_variant.price|money_with_currency}}</p>
+<form action="{{routes.cart_add_url}}" method="post" id="activeForm-{{block.id}}" class="active-product-form" data-carousel-cart-form>
+<input type="hidden" name="id" id="activeId-{{block.id}}" value="{{initial_variant.id}}">
+<input type="hidden" name="quantity" value="1">
+<button type="submit" class="btn" id="activeButton-{{block.id}}"{%unless initial_variant.available%} disabled{%endunless%}>{%if initial_variant.available%}{{'carousel.actions.add_to_cart'|t}}{%else%}{{'carousel.actions.sold_out'|t}}{%endif%}</button>
+</form>
+<a class="btn active-product-options" href="{{p.url}}" data-product-id="{{p.id}}" data-product-url{%if p.has_only_default_variant%} hidden{%endif%}>{{'carousel.actions.choose_options'|t}}</a>
+<p class="add-to-cart-feedback" id="activeFeedback-{{block.id}}" aria-live="polite"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+{%elsif request.design_mode%}
+<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>
+{%endif%}
+{%schema%}{"name":"t:db","target":"section","available_if":"{{ app.metafields.billing.pro_access }}","stylesheet":"slider-07.css","javascript":"slider-07.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"select","id":"products_display_mode","label":"t:ac","options":[{"value":"limited","label":"t:ad"},{"value":"all","label":"t:ae"}],"default":"limited"},{"type":"range","id":"products_limit","label":"t:af","min":4,"max":16,"step":1,"default":10},{"type":"header","content":"t:ag"},{"type":"text","id":"section_height","label":"t:s","default":"700px"},{"type":"header","content":"t:ai"},{"type":"color","id":"text_color","label":"t:aj"},{"type":"text","id":"text_font_size","label":"t:ak","info":"t:al"},{"type":"color","id":"button_color","label":"t:am"},{"type":"color","id":"button_text_color","label":"t:an"},{"type":"text","id":"button_font_size","label":"t:ao","info":"t:ap"},{"type":"image_picker","id":"ambient_image","label":"t:dc"},{"type":"header","content":"t:dd"},{"type":"color","id":"bg_color","label":"t:de","default":"#0b0c10"},{"type":"image_picker","id":"bg_image","label":"t:df"},{"type":"select","id":"bg_image_size","label":"t:dg","options":[{"value":"cover","label":"t:bo"},{"value":"contain","label":"t:bn"},{"value":"auto","label":"Auto"}],"default":"cover"},{"type":"range","id":"bg_image_opacity","label":"t:dh","min":0,"max":100,"step":5,"default":100,"unit":"%"},{"type":"range","id":"bg_image_blur","label":"t:di","min":0,"max":50,"step":1,"default":0,"unit":"px"},{"type":"header","content":"t:dj"},{"type":"range","id":"perspective_3d","label":"t:dk","min":400,"max":2000,"step":50,"default":1000,"unit":"px"},{"type":"range","id":"tilt_3d","label":"t:dl","min":-45,"max":45,"step":1,"default":-22,"unit":"deg"},{"type":"range","id":"radius_3d","label":"t:dm","info":"t:dn","min":200,"max":1200,"step":10,"default":420,"unit":"px"}]}{%endschema%}

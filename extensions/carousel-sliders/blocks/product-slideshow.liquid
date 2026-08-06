@@ -1,9 +1,13 @@
+{% render 'analytics' %}
 {%-assign s=block.settings-%}
 {%liquid
 assign c=s.collection
 assign m=s.product_limit
 assign ms=s.transition_duration|times:100%}
 <carousel-product-slideshow
+data-carousel-root
+data-carousel-layout="product-slideshow"
+data-carousel-block-id="{{block.id}}"
 id="ProductSlideshow-{{block.id}}"
 class="pss"
 data-initial-index="-1"
