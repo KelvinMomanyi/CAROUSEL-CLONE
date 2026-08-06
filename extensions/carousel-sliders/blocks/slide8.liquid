@@ -13,6 +13,7 @@ assign n=m
 if d =='all'
 assign n=c.products_count|default:c.products.size|at_most:8
 endif%}
+{%if app.metafields.billing.pro_access%}
 {%if c != blank and c.products_count > 0%}
 <div
 id="{{id}}"
@@ -73,5 +74,6 @@ style="{%render 'carousel-color-variables',s:s%}--s10-height: {{s.section_height
 </div>
 {%elsif request.design_mode%}
 <div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>
+{%endif%}
 {%endif%}
 {%schema%}{"name":"t:ef","target":"section","available_if":"{{ app.metafields.billing.pro_access }}","stylesheet":"slider-10.css","javascript":"slider-10.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"select","id":"products_display_mode","label":"t:ac","options":[{"value":"limited","label":"t:ad"},{"value":"all","label":"t:ae"}],"default":"limited"},{"type":"range","id":"products_limit","label":"t:af","min":2,"max":8,"step":1,"default":3},{"type":"header","content":"t:ag"},{"type":"paragraph","content":"t:dt"},{"type":"select","id":"color_scheme_mode","label":"t:du","options":[{"value":"inherit","label":"t:dv"},{"value":"custom","label":"t:dw"}],"default":"inherit"},{"type":"color","id":"custom_background_color","label":"t:dx"},{"type":"color_background","id":"custom_background_gradient","label":"t:dy"},{"type":"color","id":"custom_text_color","label":"t:dz"},{"type":"color","id":"custom_button_color","label":"t:ea"},{"type":"color","id":"custom_button_text_color","label":"t:eb"},{"type":"color","id":"custom_outline_color","label":"t:ec"},{"type":"color","id":"custom_shadow_color","label":"t:ed"},{"type":"text","id":"section_height","label":"t:s","default":"700px"},{"type":"header","content":"t:ai"},{"type":"color","id":"text_color","label":"t:aj"},{"type":"text","id":"text_font_size","label":"t:ak","info":"t:al"},{"type":"color","id":"button_color","label":"t:am"},{"type":"color","id":"button_text_color","label":"t:an"},{"type":"text","id":"button_font_size","label":"t:ao","info":"t:ap"}]}{%endschema%}

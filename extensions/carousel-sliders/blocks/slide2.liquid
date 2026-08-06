@@ -13,6 +13,7 @@ assign n=m
 if d =='all'
 assign n=c.products_count|default:c.products.size|at_most:12
 endif%}
+{%if app.metafields.billing.pro_access%}
 {%if c != blank and c.products_count > 0%}
 <div
 id="{{id}}"
@@ -102,5 +103,6 @@ style="
 <div class="slider-liquid-empty" {{block.shopify_attributes}}>
 {{'carousel.empty.collection'|t}}
 </div>
+{%endif%}
 {%endif%}
 {%schema%}{"name":"t:v","target":"section","available_if":"{{ app.metafields.billing.pro_access }}","stylesheet":"slider-03-aerphone.css","javascript":"slider-03-aerphone.js","settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"select","id":"products_display_mode","label":"t:ac","options":[{"value":"limited","label":"t:ad"},{"value":"all","label":"t:ae"}],"default":"limited"},{"type":"range","id":"products_limit","label":"t:af","min":3,"max":12,"step":1,"default":6},{"type":"header","content":"t:ag"},{"type":"text","id":"section_height","label":"t:s","default":"800px"},{"type":"header","content":"t:ai"},{"type":"color","id":"text_color","label":"t:aj"},{"type":"text","id":"text_font_size","label":"t:ak","info":"t:al"},{"type":"color","id":"button_color","label":"t:am"},{"type":"color","id":"button_text_color","label":"t:an"},{"type":"text","id":"button_font_size","label":"t:ao","info":"t:ap"}],"disabled_on":{"groups":["header","footer"]}}{%endschema%}
