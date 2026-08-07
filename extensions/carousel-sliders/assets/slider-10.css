@@ -18,6 +18,7 @@
 /* ── Product image ────────────────────────────────────── */
 .slider-10-root .item .image { position: absolute; top: 0; left: 0; width: 100%; height: 75%; box-sizing: border-box; padding: 36px 110px 56px; text-align: center; display: flex; justify-content: center; align-items: end; opacity: 0; transform: scale(3); transition: 1.5s; }
 .slider-10-root .item .image img, .slider-10-root .item .image .product-image-placeholder { width: min(68%, 620px); max-width: 100%; height: auto; max-height: 100%; aspect-ratio: 4 / 3; object-fit: contain; transition: 0.5s; }
+.slider-10-root .item .image img.vanish-product-cutout { aspect-ratio: auto; object-fit: contain; filter: drop-shadow(0 20px 22px rgba(var(--slider-shadow-rgb), 0.34)); }
 .slider-10-root .item .image::before { position: absolute; bottom: -30px; height: 60px; width: 60%; background-color: var(--slider-shadow); content: ''; z-index: -1; border-radius: 50%; filter: blur(30px); }
 .slider-10-root .item .image img:hover { transform: scale(1.1); }
 

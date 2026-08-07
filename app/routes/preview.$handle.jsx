@@ -487,12 +487,19 @@ function sliderElegance(products) {
 
 /** carousel_vanish — slider-10.css / slider-10.js */
 function sliderVanish(products) {
+  const cutoutImages = {
+    "wireless-headphones-pro": "/vanish/headphones.png",
+    "smart-watch-series-x": "/vanish/watch.png",
+    "running-shoes-elite": "/vanish/shoe.png",
+    "canvas-backpack": "/vanish/backpack.png",
+  };
+
   const items = products
     .map(
       (p, i) => `
   <div class="item">
     <div class="image">
-      <img src="${p.portrait}" alt="${p.title}" loading="${i === 0 ? "eager" : "lazy"}" width="700" height="900" style="width:100%;height:100%;object-fit:cover;">
+      <img src="${cutoutImages[p.handle] ?? p.portrait}" class="vanish-product-cutout" alt="${p.title}" loading="${i === 0 ? "eager" : "lazy"}" width="618" height="618">
     </div>
     <div class="content">
       <div class="left">
