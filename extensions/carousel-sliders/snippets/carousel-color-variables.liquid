@@ -1,121 +1,90 @@
 {%liquid
-assign u=false
-if s.color_scheme_mode == 'custom'
+if s.color_scheme_mode=='custom'
 assign u=true
-endif
-assign bg=blank
-assign fg=blank
-assign ac=blank
-assign tx=blank
-assign ol=blank
-assign er=blank
-if u
-if s.custom_background_color != blank
 assign bg=s.custom_background_color
-endif
-if s.custom_text_color != blank
 assign fg=s.custom_text_color
-endif
-if s.custom_button_color != blank
 assign ac=s.custom_button_color
-endif
-if s.custom_button_text_color != blank
 assign tx=s.custom_button_text_color
-endif
-if s.custom_outline_color != blank
 assign ol=s.custom_outline_color
-endif
-if s.custom_error_color != blank
 assign er=s.custom_error_color
 endif
-endif
-assign rc=blank
-assign rr=blank
-assign bc=blank
-assign br=blank
-assign ft=false
-assign fa=false
-assign fo=false
-assign fb=false
-assign fe=false
-if bg != blank
-assign dc=bg|color_contrast: '#000000'
-assign lc=bg|color_contrast: '#ffffff'
-if dc > lc
+if bg!=blank
+assign dc=bg|color_contrast:'#000000'
+assign lc=bg|color_contrast:'#ffffff'
+if dc>lc
 assign rc='#000000'
-assign rr='0, 0, 0'
+assign rr='0,0,0'
 else
 assign rc='#ffffff'
-assign rr='255, 255, 255'
+assign rr='255,255,255'
 endif
-if fg != blank
-assign c=bg|color_contrast: fg
-if c < 4.5
+if fg!=blank
+assign c=bg|color_contrast:fg
+if c<4.5
 assign ft=true
 endif
 else
 assign ft=true
 endif
-if ac != blank
-assign c=bg|color_contrast: ac
-if c < 4.5
+if ac!=blank
+assign c=bg|color_contrast:ac
+if c<4.5
 assign fa=true
 endif
 endif
-if ol != blank
-assign c=bg|color_contrast: ol
-if c < 4.5
+if ol!=blank
+assign c=bg|color_contrast:ol
+if c<4.5
 assign fo=true
 endif
 endif
-if er != blank
-assign c=bg|color_contrast: er
-if c < 4.5
+if er!=blank
+assign c=bg|color_contrast:er
+if c<4.5
 assign fe=true
 endif
 endif
 endif
 assign bs=ac
-if fa and rc != blank
+if fa and rc!=blank
 assign bs=rc
 endif
 assign be=ol
-if fo and rc != blank
+if fo and rc!=blank
 assign be=rc
 endif
-if bs != blank
-assign dc=bs|color_contrast: '#000000'
-assign lc=bs|color_contrast: '#ffffff'
-if be != blank
-assign ec=be|color_contrast: '#000000'
-if ec < dc
+if bs!=blank
+assign dc=bs|color_contrast:'#000000'
+assign lc=bs|color_contrast:'#ffffff'
+if be!=blank
+assign ec=be|color_contrast:'#000000'
+if ec<dc
 assign dc=ec
 endif
-assign ec=be|color_contrast: '#ffffff'
-if ec < lc
+assign ec=be|color_contrast:'#ffffff'
+if ec<lc
 assign lc=ec
 endif
 endif
-if dc > lc
+if dc>lc
 assign bc='#000000'
-assign br='0, 0, 0'
+assign br='0,0,0'
 else
 assign bc='#ffffff'
-assign br='255, 255, 255'
+assign br='255,255,255'
 endif
-if tx != blank
-assign c=bs|color_contrast: tx
-if be != blank
-assign ec=be|color_contrast: tx
-if ec < c
+if tx!=blank
+assign c=bs|color_contrast:tx
+if be!=blank
+assign ec=be|color_contrast:tx
+if ec<c
 assign c=ec
 endif
 endif
-if c < 4.5
+if c<4.5
 assign fb=true
 endif
 else
 assign fb=true
 endif
-endif%}
-{%if s.text_color != blank%}--slider-style-text-color: {{s.text_color}};{%endif%}{%if s.text_font_size != blank%}--slider-style-text-size: {{s.text_font_size|escape}};{%endif%}{%if s.button_color != blank%}--slider-style-button-color: {{s.button_color}};{%endif%}{%if s.button_text_color != blank%}--slider-style-button-text-color: {{s.button_text_color}};{%endif%}{%if s.button_font_size != blank%}--slider-style-button-size: {{s.button_font_size|escape}};{%endif%}{%if u and s.custom_background_color != blank%}--slider-background-rgb: {{s.custom_background_color.red}}, {{s.custom_background_color.green}}, {{s.custom_background_color.blue}};--slider-background: {{s.custom_background_color}};{%endif%}{%if u and s.custom_text_color != blank%}--slider-foreground-rgb: {{s.custom_text_color.red}}, {{s.custom_text_color.green}}, {{s.custom_text_color.blue}};--slider-foreground: {{s.custom_text_color}};{%endif%}{%if u and s.custom_button_color != blank%}--slider-button-rgb: {{s.custom_button_color.red}}, {{s.custom_button_color.green}}, {{s.custom_button_color.blue}};--slider-accent: {{s.custom_button_color}};{%endif%}{%if u and s.custom_outline_color != blank%}--slider-secondary-rgb: {{s.custom_outline_color.red}}, {{s.custom_outline_color.green}}, {{s.custom_outline_color.blue}};--slider-accent-secondary: {{s.custom_outline_color}};{%endif%}{%if u and s.custom_button_text_color != blank%}--slider-button-text-rgb: {{s.custom_button_text_color.red}}, {{s.custom_button_text_color.green}}, {{s.custom_button_text_color.blue}};--slider-on-accent: {{s.custom_button_text_color}};{%endif%}{%if u and s.custom_shadow_color != blank%}--slider-shadow-rgb: {{s.custom_shadow_color.red}}, {{s.custom_shadow_color.green}}, {{s.custom_shadow_color.blue}};{%endif%}{%if u and s.custom_error_color != blank%}--slider-error-rgb: {{s.custom_error_color.red}}, {{s.custom_error_color.green}}, {{s.custom_error_color.blue}};--slider-error: {{s.custom_error_color}};{%endif%}{%if u and s.custom_background_gradient != blank%}--slider-custom-background: {{s.custom_background_gradient}};{%elsif u and s.custom_background_color != blank%}--slider-custom-background: {{s.custom_background_color}};{%endif%}{%if ft%}--slider-foreground-rgb: {{rr}};--slider-foreground: {{rc}};{%endif%}{%if fa%}--slider-button-rgb: {{rr}};--slider-accent: {{rc}};{%endif%}{%if fo%}--slider-secondary-rgb: {{rr}};--slider-accent-secondary: {{rc}};{%endif%}{%if fb%}--slider-button-text-rgb: {{br}};--slider-on-accent: {{bc}};{%endif%}{%if fe%}--slider-error-rgb: {{rr}};--slider-error: {{rc}};{%endif%}
+endif%}{%render 'carousel-style-vars',s:s%}{%if u and s.custom_background_color!=blank%}--slider-background-rgb: {{s.custom_background_color.red}}, {{s.custom_background_color.green}}, {{s.custom_background_color.blue}};--slider-background: {{s.custom_background_color}};{%endif%}{%if u and s.custom_text_color!=blank%}--slider-foreground-rgb: {{s.custom_text_color.red}}, {{s.custom_text_color.green}}, {{s.custom_text_color.blue}};--slider-foreground: {{s.custom_text_color}};{%endif%}{%if u and s.custom_button_color!=blank%}--slider-button-rgb: {{s.custom_button_color.red}}, {{s.custom_button_color.green}}, {{s.custom_button_color.blue}};--slider-accent: {{s.custom_button_color}};{%endif%}{%if u and s.custom_outline_color!=blank%}--slider-secondary-rgb: {{s.custom_outline_color.red}}, {{s.custom_outline_color.green}}, {{s.custom_outline_color.blue}};--slider-accent-secondary: {{s.custom_outline_color}};{%endif%}{%if u and s.custom_button_text_color!=blank%}--slider-button-text-rgb: {{s.custom_button_text_color.red}}, {{s.custom_button_text_color.green}}, {{s.custom_button_text_color.blue}};--slider-on-accent: {{s.custom_button_text_color}};{%endif%}{%if u and s.custom_shadow_color!=blank%}--slider-shadow-rgb: {{s.custom_shadow_color.red}}, {{s.custom_shadow_color.green}}, {{s.custom_shadow_color.blue}};{%endif%}{%if u and s.custom_error_color!=blank%}--slider-error-rgb: {{s.custom_error_color.red}}, {{s.custom_error_color.green}}, {{s.custom_error_color.blue}};--slider-error: {{s.custom_error_color}};{%endif%}{%if u and s.custom_background_gradient!=blank%}--slider-custom-background: {{s.custom_background_gradient}};{%elsif u and s.custom_background_color!=blank%}--slider-custom-background: {{s.custom_background_color}};{%endif%}{%if ft%}--slider-foreground-rgb: {{rr}};--slider-foreground: {{rc}};{%endif%}{%if fa%}--slider-button-rgb: {{rr}};--slider-accent: {{rc}};{%endif%}{%if fo%}--slider-secondary-rgb: {{rr}};--slider-accent-secondary: {{rc}};{%endif%}{%if fb%}--slider-button-text-rgb: {{br}};--slider-on-accent: {{bc}};{%endif%}{%if fe%}--slider-error-rgb: {{rr}};--slider-error: {{rc}};{%endif%}

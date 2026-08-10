@@ -1,8 +1,6 @@
-{%render 'analytics'%}
-{%-assign s=block.settings-%}
-{%liquid
+{%render 'analytics'%}{%-assign s=block.settings-%}{%liquid
 assign id='slider-13-'|append:block.id
-if s.collection_source =='selected'
+if s.collection_source=='selected'
 assign c=s.selected_collection
 else
 assign c=collections.all
@@ -10,14 +8,11 @@ endif
 assign m=s.products_limit|default:8
 assign d=s.products_display_mode|default:'limited'
 assign n=m
-if d =='all'
+if d=='all'
 assign n=c.products_count|default:c.products.size|at_most:10
-endif%}
-{%if app.metafields.billing.pro_access%}
-{%if c != blank and c.products_count > 0%}
-<div
+endif%}{%if app.metafields.billing.pro_access%}{%if c!=blank and c.products_count>0%}<div
 id="{{id}}"
-class="slider-13-root{%if s.text_color != blank%} has-slider-text-color{%endif%}{%if s.text_font_size != blank%} has-slider-text-size{%endif%}{%if s.button_color != blank%} has-slider-button-color{%endif%}{%if s.button_text_color != blank%} has-slider-button-text-color{%endif%}{%if s.button_font_size != blank%} has-slider-button-size{%endif%}"
+class="slider-13-root{%if s.text_color!=blank%} has-slider-text-color{%endif%}{%if s.text_font_size!=blank%} has-slider-text-size{%endif%}{%if s.button_color!=blank%} has-slider-button-color{%endif%}{%if s.button_text_color!=blank%} has-slider-button-text-color{%endif%}{%if s.button_font_size!=blank%} has-slider-button-size{%endif%}"
 data-autoplay-speed="{{s.autoplay_speed|default:3}}"
 data-carousel-root
 data-carousel-layout="slider-13"
@@ -26,35 +21,23 @@ role="region"
 aria-roledescription="carousel"
 aria-label="{{s.accessibility_label|escape}}"
 style="
---slider-13-height: {{s.section_height|default:'560px'|escape}};
-{%render 'carousel-style-vars',s:s%}
+--slider-13-height:{{s.section_height|default:'560px'|escape}};{%render 'carousel-style-vars',s:s%}
 "
 {{block.shopify_attributes}}
->
-<div class="slider">
-{%for p in c.products limit:n%}
-{%liquid
-assign v=p.selected_or_first_available_variant%}
-<article class="item">
+><div class="slider">{%for p in c.products limit:n%}{%liquid
+assign v=p.selected_or_first_available_variant%}<article class="item">
 <a href="{{p.url}}" class="item__media" aria-label="{{p.title|escape}}">
 {%if p.featured_image%}
-{{p.featured_image|image_url:width:1200|image_tag:widths:'240, 480, 720, 960, 1200',sizes:'(max-width: 767px) 75vw, 360px',loading:'lazy',class:'item__image',alt:p.featured_image.alt|default:p.title}}
+{{p.featured_image|image_url:width:1200|image_tag:widths:'240,480,720,960,1200',sizes:'(max-width:767px) 75vw,360px',loading:'lazy',class:'item__image',alt:p.featured_image.alt|default:p.title}}
 {%else%}
 {{'product-1'|placeholder_svg_tag:'item__image item__image--placeholder'}}
 {%endif%}
 </a>
-<div class="item__body">
-<h2>{{p.title|escape}}</h2>
-<div class="item__price-row">
-{%if v.compare_at_price > v.price%}
+<div class="item__body"><h2>{{p.title|escape}}</h2><div class="item__price-row">{%if v.compare_at_price>v.price%}
 <span class="item__compare">{{v.compare_at_price|money_with_currency}}</span>
 {%endif%}
 <span class="item__price">{{v.price|money_with_currency}}</span>
-</div>
-<div class="item__footer">
-<div class="item__actions">
-{%if p.has_only_default_variant%}
-<form action="{{routes.cart_add_url}}" method="post" enctype="multipart/form-data" class="item__cart-form" data-slider-13-cart-form data-carousel-cart-form>
+</div><div class="item__footer"><div class="item__actions">{%if p.has_only_default_variant%}<form action="{{routes.cart_add_url}}" method="post" enctype="multipart/form-data" class="item__cart-form" data-slider-13-cart-form data-carousel-cart-form>
 <input type="hidden" name="id" value="{{v.id}}">
 <input type="hidden" name="quantity" value="1">
 <button class="item__cart-button" type="submit"{%unless v.available%} disabled{%endunless%}>
@@ -63,31 +46,17 @@ assign v=p.selected_or_first_available_variant%}
 <span class="item__cart-button-label" data-slider-13-cart-label>{%if v.available%}{{'carousel.actions.add_to_cart'|t}}{%else%}{{'carousel.actions.sold_out'|t}}{%endif%}</span>
 </span>
 </button>
-</form>
-{%else%}
+</form>{%else%}
 <a class="item__cart-button" href="{{p.url}}" data-product-id="{{p.id}}" data-product-url>
 <span class="item__cart-button-copy"><span class="item__cart-button-label">{{'carousel.actions.choose_options'|t}}</span></span>
 </a>
-{%endif%}
-<p class="item__cart-feedback" data-slider-13-cart-feedback aria-live="polite"></p>
-</div>
-</div>
-</div>
-</article>
-{%endfor%}
-<div class="slider__controls" role="group" aria-label="{{'carousel.controls.group'|t}}">
+{%endif%}<p class="item__cart-feedback" data-slider-13-cart-feedback aria-live="polite"></p></div></div></div></article>{%endfor%}<div class="slider__controls" role="group" aria-label="{{'carousel.controls.group'|t}}">
 <button class="slider-13-prev" type="button" aria-label="{{'carousel.controls.previous'|t}}">&#8249;</button>
 <button class="slider-13-next" type="button" aria-label="{{'carousel.controls.next'|t}}">&#8250;</button>
-</div>
-</div>
-</div>
+</div></div></div>
 <style>
 #{{id}} {
 min-height: {{s.section_height}};
 }
 </style>
-{%elsif request.design_mode%}
-<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>
-{%endif%}
-{%endif%}
-{%schema%}{"name":"t:aq","target":"section","available_if":"{{ app.metafields.billing.pro_access }}","stylesheet":"slider-13.css","javascript":"slider-13.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"select","id":"products_display_mode","label":"t:ac","options":[{"value":"limited","label":"t:ad"},{"value":"all","label":"t:ae"}],"default":"limited"},{"type":"range","id":"products_limit","label":"t:af","min":3,"max":10,"step":1,"default":8},{"type":"text","id":"section_height","label":"t:s","default":"560px"},{"type":"range","id":"autoplay_speed","label":"t:as","min":2,"max":10,"step":1,"default":4},{"type":"header","content":"t:ai"},{"type":"color","id":"text_color","label":"t:aj"},{"type":"text","id":"text_font_size","label":"t:ak","info":"t:al"},{"type":"color","id":"button_color","label":"t:am"},{"type":"color","id":"button_text_color","label":"t:an"},{"type":"text","id":"button_font_size","label":"t:ao","info":"t:ap"}]}{%endschema%}
+{%elsif request.design_mode%}<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>{%endif%}{%endif%}{%schema%}{"name":"t:aq","target":"section","available_if":"{{app.metafields.billing.pro_access}}","stylesheet":"slider-13.css","javascript":"slider-13.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"select","id":"products_display_mode","label":"t:ac","options":[{"value":"limited","label":"t:ad"},{"value":"all","label":"t:ae"}],"default":"limited"},{"type":"range","id":"products_limit","label":"t:af","min":3,"max":10,"step":1,"default":8},{"type":"text","id":"section_height","label":"t:s","default":"560px"},{"type":"range","id":"autoplay_speed","label":"t:as","min":2,"max":10,"step":1,"default":4},{"type":"header","content":"t:ai"},{"type":"color","id":"text_color","label":"t:aj"},{"type":"text","id":"text_font_size","label":"t:ak","info":"t:al"},{"type":"color","id":"button_color","label":"t:am"},{"type":"color","id":"button_text_color","label":"t:an"},{"type":"text","id":"button_font_size","label":"t:ao","info":"t:ap"}]}{%endschema%}

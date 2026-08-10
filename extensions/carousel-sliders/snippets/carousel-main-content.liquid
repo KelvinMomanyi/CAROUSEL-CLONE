@@ -1,44 +1,22 @@
-<div class="shv-slider-track" aria-live="polite">
-{%for product in c.products limit: n%}
-{%assign v=product.selected_or_first_available_variant%}
-<article class="shv-slide" data-carousel-slide>
-{%if product.featured_image%}
-{%assign l='lazy'%}{%if forloop.first%}{%assign l='eager'%}{%endif%}
-{{product.featured_image|image_url: width: 1800|image_tag: widths: '480, 750, 1100, 1500, 1800', sizes: '100vw', loading: l, class: 'slider-img', alt: product.featured_image.alt|default: product.title}}
+<div class="shv-slider-track" aria-live="polite">{%for product in c.products limit:n%}{%assign v=product.selected_or_first_available_variant%}<article class="shv-slide" data-carousel-slide>{%if product.featured_image%}{%assign l='lazy'%}{%if forloop.first%}{%assign l='eager'%}{%endif%}
+{{product.featured_image|image_url:width:1800|image_tag:widths:'480,750,1100,1500,1800',sizes:'100vw',loading:l,class:'slider-img',alt:product.featured_image.alt|default:product.title}}
 {%else%}
-{{'product-1'|placeholder_svg_tag: 'slider-img slider-img--placeholder'}}
-{%endif%}
-<div class="shv-slide-content">
-<div class="shv-slide-meta"><a href="{{product.url}}" data-product-id="{{product.id}}" data-product-url>{{product.title|escape}}</a></div>
-<div class="shv-slide-title">{%if modern%}{%if v.compare_at_price > v.price%}<span class="price-compare">{{v.compare_at_price|money_with_currency}}</span>{%endif%}<span class="price-span">{{v.price|money_with_currency}}</span>{%else%}<span class="price-span">{{product.price|money}}</span>{%endif%}</div>
-<div class="buttons">
-{%if product.has_only_default_variant%}
-<form action="{{routes.cart_add_url}}" method="post" data-carousel-cart-form>
+{{'product-1'|placeholder_svg_tag:'slider-img slider-img--placeholder'}}
+{%endif%}<div class="shv-slide-content"><div class="shv-slide-meta"><a href="{{product.url}}" data-product-id="{{product.id}}" data-product-url>{{product.title|escape}}</a></div><div class="shv-slide-title">{%if modern%}{%if v.compare_at_price>v.price%}<span class="price-compare">{{v.compare_at_price|money_with_currency}}</span>{%endif%}<span class="price-span">{{v.price|money_with_currency}}</span>{%else%}<span class="price-span">{{product.price|money}}</span>{%endif%}</div><div class="buttons">{%if product.has_only_default_variant%}<form action="{{routes.cart_add_url}}" method="post" data-carousel-cart-form>
 <input type="hidden" name="id" value="{{v.id}}">
 <input type="hidden" name="quantity" value="1">
 <button type="submit" class="shv-add-to-cart-btn"{%unless v.available%} disabled{%endunless%}><span aria-hidden="true">+</span><span class="hide-on-mobile">{%if v.available%}{{'carousel.actions.add_to_cart'|t}}{%else%}{{'carousel.actions.sold_out'|t}}{%endif%}</span></button>
-</form>
-{%else%}
+</form>{%else%}
 <a class="shv-add-to-cart-btn" href="{{product.url}}" data-product-id="{{product.id}}" data-product-url>{%if modern%}<span aria-hidden="true">+</span><span class="hide-on-mobile">{{'carousel.actions.choose_options'|t}}</span>{%else%}{{'carousel.actions.choose_options'|t}}{%endif%}</a>
 {%endif%}
-</div>
-</div>
-</article>
-{%endfor%}
-</div>
-<div class="shv-slider-thumbs" aria-hidden="true">
-{%for product in c.products limit: n%}
-<div class="shv-slide">
-{%if product.featured_image%}
-{{product.featured_image|image_url: width: 540|image_tag: widths: '180, 360, 540', sizes: '180px', loading: 'lazy', class: 'thumbnail-img', alt: ''}}
+</div></div></article>{%endfor%}
+</div><div class="shv-slider-thumbs" aria-hidden="true">{%for product in c.products limit:n%}<div class="shv-slide">{%if product.featured_image%}
+{{product.featured_image|image_url:width:540|image_tag:widths:'180,360,540',sizes:'180px',loading:'lazy',class:'thumbnail-img',alt:''}}
 {%else%}
-{{'product-1'|placeholder_svg_tag: 'thumbnail-img'}}
+{{'product-1'|placeholder_svg_tag:'thumbnail-img'}}
 {%endif%}
-</div>
-{%endfor%}
-</div>
-<div class="shv-slider-nav" role="group" aria-label="{{'carousel.controls.group'|t}}">
+</div>{%endfor%}
+</div><div class="shv-slider-nav" role="group" aria-label="{{'carousel.controls.group'|t}}">
 <button type="button" class="shv-nav-prev" aria-label="{{'carousel.controls.previous'|t}}">&#8249;</button>
 <button type="button" class="shv-nav-next" aria-label="{{'carousel.controls.next'|t}}">&#8250;</button>
-</div>
-<div class="slider-progress" aria-hidden="true"></div>
+</div><div class="slider-progress" aria-hidden="true"></div>

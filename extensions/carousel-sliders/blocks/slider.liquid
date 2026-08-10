@@ -1,22 +1,19 @@
-{%render 'analytics'%}
-{%liquid
+{%render 'analytics'%}{%liquid
 assign s=block.settings
 assign c=blank
-if s.collection_source == 'selected'
+if s.collection_source=='selected'
 assign c=s.selected_collection
 else
 assign c=collections.all
 endif
-assign n=s.products_limit | default: 8 | at_least: 2 | at_most: 16
-assign count=c.products_count | default: 0 | at_most: n
-assign id='shv-carousel-' | append: block.id
+assign n=s.products_limit | default:8 | at_least:2 | at_most:16
+assign count=c.products_count | default:0 | at_most:n
+assign id='shv-carousel-' | append:block.id
 assign label=s.accessibility_label | strip
-if label == blank
+if label==blank
 assign label='blocks.product_slideshow.aria_label' | t
 endif
-assign status_template='blocks.product_slideshow.status' | t%}
-{%if c != blank and count > 0%}
-<section
+assign status_template='blocks.product_slideshow.status' | t%}{%if c!=blank and count>0%}<section
 id="{{id}}"
 class="shv-main-slider{%if s.enable_gradient_background%} shv-gradient-enabled shv-gradient-{{s.gradient_shape}}{%endif%}"
 data-shv-main-slider
@@ -26,21 +23,13 @@ data-carousel-block-id="{{block.id}}"
 data-carousel-count="{{count}}"
 data-carousel-status-template="{{status_template|escape}}"
 style="
---theme-accent: {{s.gradient_color_start|default:'#f1683a'}};
---theme-text: {{s.custom_text_color|default:'#ffffff'}};
---theme-bg: #111418;
-{%render 'carousel-responsive-variables',s:s,c:c%}
+--theme-accent:{{s.gradient_color_start|default:'#f1683a'}};--theme-text:{{s.custom_text_color|default:'#ffffff'}};--theme-bg:#111418;{%render 'carousel-responsive-variables',s:s,c:c%}
 "
 role="region"
 aria-roledescription="carousel"
 aria-label="{{label|escape}}"
 aria-busy="false"
 {{block.shopify_attributes}}
->
-{%render 'carousel-main-content',c:c,n:n,modern:false%}
+>{%render 'carousel-main-content',c:c,n:n,modern:false%}
 <span class="shv-carousel-status" data-carousel-status aria-live="polite" aria-atomic="true"></span>
-</section>
-{%elsif request.design_mode%}
-<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>
-{%endif%}
-{%schema%}{"name":"t:do","target":"section","stylesheet":"slider-main.css","javascript":"slider-main.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"range","id":"products_limit","label":"t:bb","min":2,"max":16,"step":1,"default":8},{"type":"range","id":"section_height","label":"t:s","min":360,"max":900,"step":20,"unit":"px","default":700},{"type":"header","content":"t:bc"},{"type":"select","id":"aspect_ratio_large","label":"t:bd","options":[{"value":"auto","label":"Auto"},{"value":"16/9","label":"16:9"},{"value":"21/9","label":"21:9"},{"value":"4/3","label":"4:3"},{"value":"3/2","label":"3:2"},{"value":"1/1","label":"1:1"},{"value":"3/4","label":"3:4"},{"value":"9/16","label":"9:16"}],"default":"auto"},{"type":"select","id":"image_fit_large","label":"t:bm","options":[{"value":"contain","label":"t:bn"},{"value":"cover","label":"t:bo"}],"default":"cover"},{"type":"header","content":"t:bp"},{"type":"select","id":"aspect_ratio_medium","label":"t:bd","options":[{"value":"auto","label":"Auto"},{"value":"16/9","label":"16:9"},{"value":"4/3","label":"4:3"},{"value":"3/2","label":"3:2"},{"value":"1/1","label":"1:1"},{"value":"3/4","label":"3:4"},{"value":"9/16","label":"9:16"}],"default":"auto"},{"type":"select","id":"image_fit_medium","label":"t:bm","options":[{"value":"contain","label":"t:bn"},{"value":"cover","label":"t:bo"}],"default":"cover"},{"type":"header","content":"t:bq"},{"type":"select","id":"aspect_ratio_small","label":"t:bd","options":[{"value":"auto","label":"Auto"},{"value":"9/16","label":"9:16"},{"value":"3/4","label":"3:4"},{"value":"1/1","label":"1:1"},{"value":"4/3","label":"4:3"},{"value":"16/9","label":"16:9"}],"default":"auto"},{"type":"select","id":"image_fit_small","label":"t:bm","options":[{"value":"contain","label":"t:bn"},{"value":"cover","label":"t:bo"}],"default":"cover"},{"type":"header","content":"Text"},{"type":"color","id":"custom_text_color","label":"t:aj","default":"#ffffff"},{"type":"text","id":"custom_title_size","label":"t:dp"},{"type":"text","id":"custom_subtitle_size","label":"t:dq"},{"type":"text","id":"custom_price_size","label":"t:dr"},{"type":"text","id":"custom_button_size","label":"t:ao"},{"type":"header","content":"t:u"},{"type":"checkbox","id":"enable_gradient_background","label":"t:cl","default":true},{"type":"select","id":"gradient_shape","label":"t:cm","options":[{"value":"rectangle","label":"t:cn"},{"value":"rounded","label":"t:co"},{"value":"pill","label":"Pill"},{"value":"slashed","label":"t:cq"},{"value":"angled-left","label":"t:cr"},{"value":"angled-right","label":"t:cs"},{"value":"chevron-right","label":"t:ct"},{"value":"chevron-left","label":"t:cu"},{"value":"notch-right","label":"t:cv"},{"value":"wave","label":"Wave"},{"value":"diagonal-cut","label":"t:cx"}],"default":"rounded"},{"type":"range","id":"gradient_border_radius","label":"t:cy","min":0,"max":50,"step":1,"default":18,"unit":"px"},{"type":"color","id":"gradient_color_start","label":"t:cz","default":"#f1683a"},{"type":"color","id":"gradient_color_end","label":"t:da","default":"#8a2be2"}]}{%endschema%}
+</section>{%elsif request.design_mode%}<div class="slider-liquid-empty" role="status" {{block.shopify_attributes}}>{{'carousel.empty.collection'|t}}</div>{%endif%}{%schema%}{"name":"t:do","target":"section","stylesheet":"slider-main.css","javascript":"slider-main.js","disabled_on":{"groups":["header","footer"]},"settings":[{"type":"text","id":"accessibility_label","label":"t:w","default":"t:x"},{"type":"select","id":"collection_source","label":"t:y","options":[{"value":"all","label":"t:z"},{"value":"selected","label":"t:aa"}],"default":"all"},{"type":"collection","id":"selected_collection","label":"t:ab"},{"type":"range","id":"products_limit","label":"t:bb","min":2,"max":16,"step":1,"default":8},{"type":"range","id":"section_height","label":"t:s","min":360,"max":900,"step":20,"unit":"px","default":700},{"type":"header","content":"t:bc"},{"type":"select","id":"aspect_ratio_large","label":"t:bd","options":[{"value":"auto","label":"Auto"},{"value":"16/9","label":"16:9"},{"value":"21/9","label":"21:9"},{"value":"4/3","label":"4:3"},{"value":"3/2","label":"3:2"},{"value":"1/1","label":"1:1"},{"value":"3/4","label":"3:4"},{"value":"9/16","label":"9:16"}],"default":"auto"},{"type":"select","id":"image_fit_large","label":"t:bm","options":[{"value":"contain","label":"t:bn"},{"value":"cover","label":"t:bo"}],"default":"cover"},{"type":"header","content":"t:bp"},{"type":"select","id":"aspect_ratio_medium","label":"t:bd","options":[{"value":"auto","label":"Auto"},{"value":"16/9","label":"16:9"},{"value":"4/3","label":"4:3"},{"value":"3/2","label":"3:2"},{"value":"1/1","label":"1:1"},{"value":"3/4","label":"3:4"},{"value":"9/16","label":"9:16"}],"default":"auto"},{"type":"select","id":"image_fit_medium","label":"t:bm","options":[{"value":"contain","label":"t:bn"},{"value":"cover","label":"t:bo"}],"default":"cover"},{"type":"header","content":"t:bq"},{"type":"select","id":"aspect_ratio_small","label":"t:bd","options":[{"value":"auto","label":"Auto"},{"value":"9/16","label":"9:16"},{"value":"3/4","label":"3:4"},{"value":"1/1","label":"1:1"},{"value":"4/3","label":"4:3"},{"value":"16/9","label":"16:9"}],"default":"auto"},{"type":"select","id":"image_fit_small","label":"t:bm","options":[{"value":"contain","label":"t:bn"},{"value":"cover","label":"t:bo"}],"default":"cover"},{"type":"header","content":"Text"},{"type":"color","id":"custom_text_color","label":"t:aj","default":"#ffffff"},{"type":"text","id":"custom_title_size","label":"t:dp"},{"type":"text","id":"custom_subtitle_size","label":"t:dq"},{"type":"text","id":"custom_price_size","label":"t:dr"},{"type":"text","id":"custom_button_size","label":"t:ao"},{"type":"header","content":"t:u"},{"type":"checkbox","id":"enable_gradient_background","label":"t:cl","default":true},{"type":"select","id":"gradient_shape","label":"t:cm","options":[{"value":"rectangle","label":"t:cn"},{"value":"rounded","label":"t:co"},{"value":"pill","label":"Pill"},{"value":"slashed","label":"t:cq"},{"value":"angled-left","label":"t:cr"},{"value":"angled-right","label":"t:cs"},{"value":"chevron-right","label":"t:ct"},{"value":"chevron-left","label":"t:cu"},{"value":"notch-right","label":"t:cv"},{"value":"wave","label":"Wave"},{"value":"diagonal-cut","label":"t:cx"}],"default":"rounded"},{"type":"range","id":"gradient_border_radius","label":"t:cy","min":0,"max":50,"step":1,"default":18,"unit":"px"},{"type":"color","id":"gradient_color_start","label":"t:cz","default":"#f1683a"},{"type":"color","id":"gradient_color_end","label":"t:da","default":"#8a2be2"}]}{%endschema%}
