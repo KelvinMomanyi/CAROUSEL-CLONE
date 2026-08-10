@@ -15,7 +15,6 @@ export const BILLING_PLANS = {
         "animated_hero",
         "infinite_marquee",
         "testimonials",
-        "image_reveal",
       ],
     },
   },

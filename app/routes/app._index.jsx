@@ -235,7 +235,7 @@ const components = [
     templates: ["index", "product", "collection", "page"],
     content: "Up to five images",
     performance: "Light",
-    access: "Free",
+    access: "Pro",
     preview: "accordion",
     palette: "mint",
   },

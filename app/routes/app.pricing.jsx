@@ -50,7 +50,7 @@ export default function Pricing() {
               {!fullAccess ? "Current plan" : "Included"}
             </s-badge>
             <s-unordered-list>
-              <s-list-item>Seven storefront motion components</s-list-item>
+              <s-list-item>Five storefront motion components</s-list-item>
               <s-list-item>Up to six products per free carousel</s-list-item>
               <s-list-item>Theme editor customization</s-list-item>
               <s-list-item>Storefront interaction analytics</s-list-item>
