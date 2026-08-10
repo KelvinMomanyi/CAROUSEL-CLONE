@@ -525,6 +525,7 @@ function sliderVanish(products) {
 <div
   id="slider-10-demo"
   class="slider-10-root gradient"
+  data-block-id="demo"
   data-carousel-root
   data-carousel-layout="slider-10"
   style="--s10-height:700px;"
