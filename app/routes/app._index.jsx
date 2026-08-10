@@ -228,15 +228,15 @@ const components = [
   },
   {
     handle: "image_reveal",
-    name: "Image reveal",
+    name: "Hover accordion",
     eyebrow: "Storytelling",
     category: "Galleries",
-    description: "An interactive before-and-after comparison for product details and transformations.",
+    description: "A hover-to-expand media gallery for product stories, campaign imagery and editorial collections.",
     templates: ["index", "product", "collection", "page"],
-    content: "Two images",
+    content: "Up to five images",
     performance: "Light",
     access: "Free",
-    preview: "reveal",
+    preview: "accordion",
     palette: "mint",
   },
 ];
@@ -272,7 +272,7 @@ const componentGuidance = {
   product_story: { bestFor: "Editorial storytelling", interaction: "Scroll or drag" },
   shoppable_gallery: { bestFor: "Shop-the-look imagery", interaction: "Select hotspots" },
   testimonials: { bestFor: "Customer trust", interaction: "Select a quote" },
-  image_reveal: { bestFor: "Before and after", interaction: "Drag the divider" },
+  image_reveal: { bestFor: "Media storytelling", interaction: "Hover to expand" },
 };
 
 export const loader = async ({ request }) => {

@@ -994,8 +994,30 @@ function sliderTestimonials() {
 </section>`;
 }
 
-/** image_reveal — motion-sections.css / motion-sections.js */
-function sliderImageReveal(products) {
+/** image_reveal — motion-sections.css / motion-hover-accordion.js */
+function sliderHoverAccordion(products) {
+  const labels = ["Silhouette", "Material", "Details", "In motion", "Finish"];
+  const panels = products
+    .slice(0, 5)
+    .map(
+      (product, index) => `
+    <button
+      class="ms-hover-accordion__panel"
+      type="button"
+      data-accordion-panel
+      aria-expanded="${index === 0 ? "true" : "false"}"
+      aria-label="Expand ${labels[index]}"
+    >
+      <img src="${product.image}" class="ms-hover-accordion__image" loading="${index === 0 ? "eager" : "lazy"}" width="1100" height="900" alt="${product.title}">
+      <span class="ms-hover-accordion__scrim" aria-hidden="true"></span>
+      <span class="ms-hover-accordion__meta">
+        <span class="ms-hover-accordion__index">${String(index + 1).padStart(2, "0")}</span>
+        <span class="ms-hover-accordion__label">${labels[index]}</span>
+      </span>
+    </button>`
+    )
+    .join("");
+
   return `
 <section
   class="ms-section"
@@ -1003,24 +1025,19 @@ function sliderImageReveal(products) {
 >
   <div class="ms-section__header">
     <div>
-      <p class="ms-section__eyebrow">See the difference</p>
-      <h2 class="ms-section__heading">A transformation you can feel</h2>
-      <p class="ms-section__copy">Drag the handle to compare materials, finishes, results or product details.</p>
+      <p class="ms-section__eyebrow">Curated highlights</p>
+      <h2 class="ms-section__heading">Hover to discover every angle</h2>
+      <p class="ms-section__copy">Move across the gallery to expand each story, or use focus and arrow keys to explore.</p>
     </div>
   </div>
-  <motion-image-reveal class="ms-reveal" style="--ms-reveal:50%;">
-    <img src="${products[2].image}" class="ms-reveal__image" loading="eager" width="1400" height="720" alt="Product in a muted finish" style="filter:grayscale(1) saturate(.55) brightness(.82);">
-    <div class="ms-reveal__after">
-      <img src="${products[2].image}" class="ms-reveal__image" loading="eager" width="1400" height="720" alt="Product in its original finish">
-    </div>
-    <div class="ms-reveal__divider">
-      <span class="ms-reveal__handle">↔</span>
-    </div>
-    <span class="ms-reveal__label ms-reveal__label--before">Before</span>
-    <span class="ms-reveal__label ms-reveal__label--after">After</span>
-    <label class="ms-sr-only" for="MotionReveal-demo">Reveal slider</label>
-    <input class="ms-reveal__range" id="MotionReveal-demo" type="range" min="0" max="100" value="50" aria-label="Image reveal position">
-  </motion-image-reveal>
+  <motion-hover-accordion
+    class="ms-hover-accordion"
+    data-start-index="0"
+    role="group"
+    aria-label="Expandable product media gallery"
+    style="--ms-accordion-height:620px;--ms-accordion-gap:12px;--ms-accordion-active:5;"
+  >${panels}
+  </motion-hover-accordion>
 </section>`;
 }
 
@@ -1126,9 +1143,9 @@ const CONFIGS = {
   },
   image_reveal: {
     css: "motion-sections.css",
-    js: "motion-sections.js",
+    js: "motion-hover-accordion.js",
     bg: "#e0eee5",
-    render: (p) => sliderImageReveal(p),
+    render: (p) => sliderHoverAccordion(p),
   },
 };
 

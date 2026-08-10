@@ -20,7 +20,7 @@
 .ms-section__controls { display: flex; gap: 8px; flex: 0 0 auto; }
 .ms-icon-button { appearance: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid color-mix(in srgb, var(--ms-text), transparent 76%); border-radius: 50%; background: color-mix(in srgb, var(--ms-bg), white 12%); color: var(--ms-text); cursor: pointer; transition: color .2s ease, background .2s ease, transform .2s ease; }
 .ms-icon-button:hover { color: var(--ms-bg); background: var(--ms-text); transform: translateY(-2px); }
-.ms-icon-button:focus-visible, .ms-button:focus-visible, .ms-hotspot:focus-visible, .ms-reveal__range:focus-visible { outline: 3px solid color-mix(in srgb, var(--ms-accent), transparent 55%); outline-offset: 3px; }
+.ms-icon-button:focus-visible, .ms-button:focus-visible, .ms-hotspot:focus-visible, .ms-hover-accordion__panel:focus-visible { outline: 3px solid color-mix(in srgb, var(--ms-accent), transparent 55%); outline-offset: 3px; }
 .ms-button { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 12px 20px; border: 1px solid var(--ms-text); border-radius: 999px; background: var(--ms-text); color: var(--ms-bg) !important; text-decoration: none; font-size: 14px; font-weight: 700; transition: transform .2s ease, box-shadow .2s ease; }
 .ms-button:hover { transform: translateY(-2px); box-shadow: 0 12px 24px color-mix(in srgb, var(--ms-text), transparent 82%); }
 .ms-button--secondary { background: transparent; color: var(--ms-text) !important; }
@@ -127,16 +127,18 @@
 .ms-testimonials__dot { appearance: none; width: 22px; height: 5px; padding: 0; border: 0; border-radius: 8px; background: color-mix(in srgb, var(--ms-text), transparent 78%); cursor: pointer; transition: width .25s ease, background .25s ease; }
 .ms-testimonials__dot.is-active { width: 42px; background: var(--ms-accent); }
 
-.ms-reveal { position: relative; overflow: hidden; min-height: min(72vw, 720px); border-radius: var(--ms-radius); background: color-mix(in srgb, var(--ms-text), transparent 90%); touch-action: pan-y; }
-.ms-reveal__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.ms-reveal__after { position: absolute; inset: 0; overflow: hidden; clip-path: inset(0 calc(100% - var(--ms-reveal, 50%)) 0 0); }
-.ms-reveal__after .ms-reveal__image { max-width: none; }
-.ms-reveal__divider { position: absolute; z-index: 3; top: 0; bottom: 0; left: var(--ms-reveal, 50%); width: 2px; background: white; transform: translateX(-1px); pointer-events: none; }
-.ms-reveal__handle { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 52px; height: 52px; border: 2px solid white; border-radius: 50%; background: rgba(18,17,22,.35); color: white; font-size: 18px; backdrop-filter: blur(8px); transform: translate(-50%, -50%); }
-.ms-reveal__range { position: absolute; z-index: 4; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; }
-.ms-reveal__label { position: absolute; z-index: 3; bottom: 18px; padding: 6px 10px; border-radius: 999px; background: rgba(18,17,22,.5); color: white; font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(8px); pointer-events: none; }
-.ms-reveal__label--before { left: 18px; }
-.ms-reveal__label--after { right: 18px; }
+.ms-hover-accordion { display: flex; width: 100%; height: var(--ms-accordion-height, 620px); min-height: 420px; gap: var(--ms-accordion-gap, 12px); }
+.ms-hover-accordion__panel { appearance: none; position: relative; flex: 1 1 0; min-width: 0; height: 100%; padding: 0; overflow: hidden; border: 0; border-radius: var(--ms-radius); background: color-mix(in srgb, var(--ms-text), transparent 90%); color: white; text-align: left; cursor: pointer; isolation: isolate; transition: flex-grow .65s cubic-bezier(.2,.75,.2,1), filter .35s ease; }
+.ms-hover-accordion__panel[aria-expanded="true"] { flex-grow: var(--ms-accordion-active, 5); }
+.ms-hover-accordion__panel::after { content: ''; position: absolute; z-index: 3; inset: 0; border: 1px solid rgba(255,255,255,.22); border-radius: inherit; pointer-events: none; }
+.ms-hover-accordion__image, .ms-hover-accordion__placeholder { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; transform: scale(1.055); transition: transform .75s cubic-bezier(.2,.75,.2,1), filter .45s ease; }
+.ms-hover-accordion__panel:not([aria-expanded="true"]) .ms-hover-accordion__image { filter: saturate(.72) brightness(.78); }
+.ms-hover-accordion__panel[aria-expanded="true"] .ms-hover-accordion__image { transform: scale(1); }
+.ms-hover-accordion__scrim { position: absolute; z-index: 1; inset: 0; background: linear-gradient(180deg, rgba(8,10,9,.02) 38%, rgba(8,10,9,.78) 100%); pointer-events: none; }
+.ms-hover-accordion__meta { position: absolute; z-index: 2; right: 18px; bottom: 18px; left: 18px; display: flex; align-items: end; gap: 10px; min-width: 0; color: white; pointer-events: none; }
+.ms-hover-accordion__index { flex: 0 0 auto; padding-bottom: 2px; color: rgba(255,255,255,.68); font-size: 10px; font-weight: 750; letter-spacing: .12em; }
+.ms-hover-accordion__label { min-width: 0; overflow: hidden; font-size: clamp(16px, 2vw, 28px); font-weight: 700; letter-spacing: -.025em; line-height: 1; text-overflow: ellipsis; white-space: nowrap; opacity: .76; transform: translateY(3px); transition: opacity .3s ease, transform .45s ease; }
+.ms-hover-accordion__panel[aria-expanded="true"] .ms-hover-accordion__label { opacity: 1; transform: translateY(0); }
 
 @keyframes ms-reveal-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes ms-marquee { to { transform: translateX(-50%); } }
@@ -167,7 +169,10 @@
   .ms-gallery { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(3, minmax(300px, 60vh)); }
   .ms-gallery__item:first-child { grid-column: auto; }
   .ms-testimonials__viewport { min-height: 350px; }
-  .ms-reveal { min-height: 520px; }
+  .ms-hover-accordion { flex-direction: column; height: max(var(--ms-accordion-height, 620px), 620px); min-height: 620px; }
+  .ms-hover-accordion__panel[aria-expanded="true"] { flex-grow: min(var(--ms-accordion-active, 5), 4); }
+  .ms-hover-accordion__meta { right: 14px; bottom: 14px; left: 14px; }
+  .ms-hover-accordion__label { font-size: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

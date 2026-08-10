@@ -7,6 +7,8 @@
     "shop_product": "Shop {{ product }}",
     "testimonial": "Testimonial {{ number }}",
     "image_comparison": "Drag to compare images",
+    "hover_accordion": "Expandable media gallery",
+    "expand_panel": "Expand {{ label }}",
     "before": "Before",
     "after": "After",
     "sample_product": "Sample product {{ number }}",
