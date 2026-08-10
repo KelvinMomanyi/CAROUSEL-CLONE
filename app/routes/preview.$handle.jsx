@@ -21,10 +21,10 @@ const PRODUCTS = [
     handle: "wireless-headphones-pro",
     description:
       "Premium wireless headphones with active noise cancellation and 30-hour battery life for uninterrupted listening.",
-    image: "https://picsum.photos/seed/pd01/1400/900",
-    portrait: "https://picsum.photos/seed/pd01/700/900",
-    square: "https://picsum.photos/seed/pd01/640/640",
-    thumb: "https://picsum.photos/seed/pd01/300/380",
+    image: "/demo-products/headphones.jpg",
+    portrait: "/demo-products/headphones.jpg",
+    square: "/demo-products/headphones.jpg",
+    thumb: "/demo-products/headphones.jpg",
   },
   {
     id: 1002,
@@ -36,10 +36,10 @@ const PRODUCTS = [
     handle: "smart-watch-series-x",
     description:
       "Advanced smartwatch with health monitoring, built-in GPS and a 7-day battery that keeps up with your lifestyle.",
-    image: "https://picsum.photos/seed/pd02/1400/900",
-    portrait: "https://picsum.photos/seed/pd02/700/900",
-    square: "https://picsum.photos/seed/pd02/640/640",
-    thumb: "https://picsum.photos/seed/pd02/300/380",
+    image: "/demo-products/smartwatch.jpg",
+    portrait: "/demo-products/smartwatch.jpg",
+    square: "/demo-products/smartwatch.jpg",
+    thumb: "/demo-products/smartwatch.jpg",
   },
   {
     id: 1003,
@@ -51,10 +51,10 @@ const PRODUCTS = [
     handle: "running-shoes-elite",
     description:
       "Lightweight performance running shoes with responsive cushioning and a breathable mesh upper.",
-    image: "https://picsum.photos/seed/pd03/1400/900",
-    portrait: "https://picsum.photos/seed/pd03/700/900",
-    square: "https://picsum.photos/seed/pd03/640/640",
-    thumb: "https://picsum.photos/seed/pd03/300/380",
+    image: "/demo-products/running-shoe.jpg",
+    portrait: "/demo-products/running-shoe.jpg",
+    square: "/demo-products/running-shoe.jpg",
+    thumb: "/demo-products/running-shoe.jpg",
   },
   {
     id: 1004,
@@ -66,10 +66,10 @@ const PRODUCTS = [
     handle: "canvas-backpack",
     description:
       "Durable waxed-canvas backpack with multiple compartments, a padded laptop sleeve and water-resistant finish.",
-    image: "https://picsum.photos/seed/pd04/1400/900",
-    portrait: "https://picsum.photos/seed/pd04/700/900",
-    square: "https://picsum.photos/seed/pd04/640/640",
-    thumb: "https://picsum.photos/seed/pd04/300/380",
+    image: "/demo-products/canvas-backpack.jpg",
+    portrait: "/demo-products/canvas-backpack.jpg",
+    square: "/demo-products/canvas-backpack.jpg",
+    thumb: "/demo-products/canvas-backpack.jpg",
   },
   {
     id: 1005,
@@ -81,10 +81,10 @@ const PRODUCTS = [
     handle: "polarized-sunglasses",
     description:
       "UV400 polarized lenses in a lightweight titanium frame with scratch-resistant coating.",
-    image: "https://picsum.photos/seed/pd05/1400/900",
-    portrait: "https://picsum.photos/seed/pd05/700/900",
-    square: "https://picsum.photos/seed/pd05/640/640",
-    thumb: "https://picsum.photos/seed/pd05/300/380",
+    image: "/demo-products/sunglasses.jpg",
+    portrait: "/demo-products/sunglasses.jpg",
+    square: "/demo-products/sunglasses.jpg",
+    thumb: "/demo-products/sunglasses.jpg",
   },
   {
     id: 1006,
@@ -96,10 +96,10 @@ const PRODUCTS = [
     handle: "ceramic-pour-over-set",
     description:
       "Handcrafted ceramic pour-over set with matching carafe, perfect for a slow-brew morning ritual.",
-    image: "https://picsum.photos/seed/pd06/1400/900",
-    portrait: "https://picsum.photos/seed/pd06/700/900",
-    square: "https://picsum.photos/seed/pd06/640/640",
-    thumb: "https://picsum.photos/seed/pd06/300/380",
+    image: "/demo-products/pour-over-set.jpg",
+    portrait: "/demo-products/pour-over-set.jpg",
+    square: "/demo-products/pour-over-set.jpg",
+    thumb: "/demo-products/pour-over-set.jpg",
   },
   {
     id: 1007,
@@ -111,10 +111,10 @@ const PRODUCTS = [
     handle: "merino-wool-sweater",
     description:
       "Soft 100% merino wool sweater in a relaxed fit — warm, breathable and naturally odour-resistant.",
-    image: "https://picsum.photos/seed/pd07/1400/900",
-    portrait: "https://picsum.photos/seed/pd07/700/900",
-    square: "https://picsum.photos/seed/pd07/640/640",
-    thumb: "https://picsum.photos/seed/pd07/300/380",
+    image: "/demo-products/merino-sweater.jpg",
+    portrait: "/demo-products/merino-sweater.jpg",
+    square: "/demo-products/merino-sweater.jpg",
+    thumb: "/demo-products/merino-sweater.jpg",
   },
   {
     id: 1008,
@@ -126,10 +126,10 @@ const PRODUCTS = [
     handle: "leather-wallet-slim",
     description:
       "Full-grain leather slim wallet with RFID protection and space for 6 cards plus a cash slot.",
-    image: "https://picsum.photos/seed/pd08/1400/900",
-    portrait: "https://picsum.photos/seed/pd08/700/900",
-    square: "https://picsum.photos/seed/pd08/640/640",
-    thumb: "https://picsum.photos/seed/pd08/300/380",
+    image: "/demo-products/leather-wallet.jpg",
+    portrait: "/demo-products/leather-wallet.jpg",
+    square: "/demo-products/leather-wallet.jpg",
+    thumb: "/demo-products/leather-wallet.jpg",
   },
 ];
 
@@ -804,14 +804,14 @@ function sliderProductCoverflow(products) {
 }
 
 /** animated_hero — motion-sections.css (no JS) */
-function sliderAnimatedHero() {
+function sliderAnimatedHero(products) {
   return `
 <section
   class="ms-hero"
   style="--ms-height:720px;--ms-align:center;--ms-overlay:0.52;--ms-accent:#c5ffdf;"
 >
   <div class="ms-hero__media">
-    <img src="https://picsum.photos/seed/hero01/1600/800" alt="Hero image" loading="eager" width="1600" height="800" style="width:100%;height:100%;object-fit:cover;">
+    <img src="${products[6].image}" alt="${products[6].title}" loading="eager" width="1600" height="800" style="width:100%;height:100%;object-fit:cover;">
   </div>
   <div class="ms-hero__overlay"></div>
   <div class="ms-hero__content">
@@ -994,7 +994,7 @@ function sliderTestimonials() {
 }
 
 /** image_reveal — motion-sections.css / motion-sections.js */
-function sliderImageReveal() {
+function sliderImageReveal(products) {
   return `
 <section
   class="ms-section"
@@ -1008,9 +1008,9 @@ function sliderImageReveal() {
     </div>
   </div>
   <motion-image-reveal class="ms-reveal" style="--ms-reveal:50%;">
-    <img src="https://picsum.photos/seed/before01/1400/720" class="ms-reveal__image" loading="eager" width="1400" height="720" alt="Before">
+    <img src="${products[2].image}" class="ms-reveal__image" loading="eager" width="1400" height="720" alt="Product in a muted finish" style="filter:grayscale(1) saturate(.55) brightness(.82);">
     <div class="ms-reveal__after">
-      <img src="https://picsum.photos/seed/after01/1400/720" class="ms-reveal__image" loading="eager" width="1400" height="720" alt="After">
+      <img src="${products[2].image}" class="ms-reveal__image" loading="eager" width="1400" height="720" alt="Product in its original finish">
     </div>
     <div class="ms-reveal__divider">
       <span class="ms-reveal__handle">↔</span>
@@ -1097,7 +1097,7 @@ const CONFIGS = {
     css: "motion-sections.css",
     js: null,
     bg: "#111111",
-    render: () => sliderAnimatedHero(),
+    render: (p) => sliderAnimatedHero(p),
   },
   infinite_marquee: {
     css: "motion-sections.css",
@@ -1127,13 +1127,55 @@ const CONFIGS = {
     css: "motion-sections.css",
     js: "motion-sections.js",
     bg: "#e0eee5",
-    render: () => sliderImageReveal(),
+    render: (p) => sliderImageReveal(p),
   },
 };
 
 // ---------------------------------------------------------------------------
 // Full-page wrapper
 // ---------------------------------------------------------------------------
+function buildLibraryPreviewHtml(handle, config) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive preview — ${handle}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: ${config.bg}; }
+    .preview-stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 1440px;
+      height: 810px;
+      transform: translate(-50%, -50%) scale(var(--preview-scale, 1));
+      transform-origin: center;
+    }
+    .preview-stage iframe { display: block; width: 100%; height: 100%; border: 0; background: ${config.bg}; }
+  </style>
+</head>
+<body>
+  <div class="preview-stage">
+    <iframe src="/preview/${handle}" title="${handle} live section preview"></iframe>
+  </div>
+  <script>
+    (() => {
+      const width = 1440;
+      const height = 810;
+      const fit = () => {
+        const scale = Math.min(window.innerWidth / width, window.innerHeight / height);
+        document.documentElement.style.setProperty("--preview-scale", String(scale));
+      };
+      fit();
+      window.addEventListener("resize", fit, { passive: true });
+    })();
+  </script>
+</body>
+</html>`;
+}
+
 function buildPreviewHtml(handle) {
   const config = CONFIGS[handle];
   if (!config) {
@@ -1195,8 +1237,12 @@ ${jsTag}
 // ---------------------------------------------------------------------------
 // Route loader
 // ---------------------------------------------------------------------------
-export const loader = ({ params }) => {
-  const html = buildPreviewHtml(params.handle);
+export const loader = ({ params, request }) => {
+  const config = CONFIGS[params.handle];
+  const surface = new URL(request.url).searchParams.get("surface");
+  const html = surface === "library" && config
+    ? buildLibraryPreviewHtml(params.handle, config)
+    : buildPreviewHtml(params.handle);
   return new Response(html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",

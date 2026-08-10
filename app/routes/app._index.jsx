@@ -255,6 +255,26 @@ const liveBlockHandles = {
   carousel_modern: "slide12",
 };
 
+const componentGuidance = {
+  "product-slideshow": { bestFor: "Product discovery", interaction: "Click products" },
+  product_coverflow: { bestFor: "Featured collections", interaction: "Scroll or drag" },
+  carousel_slider: { bestFor: "Campaign storytelling", interaction: "Use the arrows" },
+  carousel_aerphone: { bestFor: "Feature-rich products", interaction: "Use the arrows" },
+  carousel_swift: { bestFor: "Launch campaigns", interaction: "Use the arrows" },
+  carousel_orbit_ring: { bestFor: "Immersive collections", interaction: "Drag the ring" },
+  carousel_elegance: { bestFor: "Fashion and beauty", interaction: "Use the arrows" },
+  carousel_vanish: { bestFor: "Minimal product stories", interaction: "Use the arrows" },
+  carousel_coverflow: { bestFor: "Visual collections", interaction: "Use the arrows" },
+  carousel_card_stack: { bestFor: "Quick product browsing", interaction: "Swipe or use arrows" },
+  carousel_modern: { bestFor: "Premium collections", interaction: "Use the arrows" },
+  animated_hero: { bestFor: "Campaign entrances", interaction: "Animated reveal" },
+  infinite_marquee: { bestFor: "Trending products", interaction: "Hover to pause" },
+  product_story: { bestFor: "Editorial storytelling", interaction: "Scroll or drag" },
+  shoppable_gallery: { bestFor: "Shop-the-look imagery", interaction: "Select hotspots" },
+  testimonials: { bestFor: "Customer trust", interaction: "Select a quote" },
+  image_reveal: { bestFor: "Before and after", interaction: "Drag the divider" },
+};
+
 export const loader = async ({ request }) => {
   const { session, billing } = await requireBilling(request);
 
@@ -280,15 +300,25 @@ function createThemeEditorLink({ shop, apiKey, blockHandle, template }) {
 }
 
 function ComponentPreview({ component }) {
+  const guidance = componentGuidance[component.handle];
+
   return (
-    <div className="motion-card-preview">
-      <iframe
-        src={`/preview/${component.handle}`}
-        title={`${component.name} interactive preview`}
-        className="motion-card-preview__frame"
-        loading="lazy"
-        sandbox="allow-scripts allow-same-origin"
-      />
+    <div className="component-card__media">
+      <div className="component-card__preview-toolbar" aria-hidden="true">
+        <span className="component-card__live-label">
+          <span className="component-card__live-dot" /> Live preview
+        </span>
+        <span>{guidance?.interaction || "Interactive"}</span>
+      </div>
+      <div className="motion-card-preview">
+        <iframe
+          src={`/preview/${component.handle}?surface=library`}
+          title={`${component.name} interactive preview`}
+          className="motion-card-preview__frame"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+        />
+      </div>
     </div>
   );
 }
@@ -307,7 +337,7 @@ function PreviewModal({ component, onAfterHide }) {
         <div className="motion-modal-preview">
           <iframe
             key={component.handle}
-            src={`/preview/${component.handle}`}
+            src={`/preview/${component.handle}?surface=library`}
             title={`${component.name} full-size interactive preview`}
             className="motion-modal-preview__frame"
             loading="eager"
@@ -329,6 +359,7 @@ function PreviewModal({ component, onAfterHide }) {
 function ComponentCard({ component, template, shop, apiKey, isPro, onPreview }) {
   const supported = component.templates.includes(template);
   const locked = component.access === "Pro" && !isPro;
+  const guidance = componentGuidance[component.handle];
   const editorUrl = createThemeEditorLink({
     shop,
     apiKey,
@@ -352,11 +383,11 @@ function ComponentCard({ component, template, shop, apiKey, isPro, onPreview }) 
         <p className="component-card__description">{component.description}</p>
         <dl className="component-card__facts">
           <div>
-            <dt>Content</dt>
-            <dd>{component.content}</dd>
+            <dt>Best for</dt>
+            <dd>{guidance?.bestFor || component.content}</dd>
           </div>
           <div>
-            <dt>Performance</dt>
+            <dt>Motion profile</dt>
             <dd>{component.performance}</dd>
           </div>
         </dl>
@@ -377,7 +408,7 @@ function ComponentCard({ component, template, shop, apiKey, isPro, onPreview }) 
             commandFor="component-preview-modal"
             onClick={() => onPreview(component.handle)}
           >
-            Preview
+            Full preview
           </s-button>
           <s-button
             variant="primary"
@@ -407,7 +438,13 @@ export default function Index() {
       const matchesCategory = category === "All" || component.category === category;
       const matchesQuery =
         !normalizedQuery ||
-        [component.name, component.description, component.category, component.content]
+        [
+          component.name,
+          component.description,
+          component.category,
+          component.content,
+          componentGuidance[component.handle]?.bestFor,
+        ]
           .join(" ")
           .toLowerCase()
           .includes(normalizedQuery);
@@ -421,7 +458,7 @@ export default function Index() {
   const previewComponent = components.find((component) => component.handle === preview) || null;
 
   return (
-    <s-page heading="Motion sections">
+    <s-page heading="Section library">
       <s-button slot="primary-action" href="/app/additional">
         Theme setup
       </s-button>
@@ -451,20 +488,28 @@ export default function Index() {
         )}
 
         <section className="library-hero" aria-labelledby="library-title">
-          <div>
-            <span className="library-hero__kicker">Storefront motion, made native</span>
-            <h1 id="library-title">Build a store that moves people.</h1>
+          <div className="library-hero__content">
+            <span className="library-hero__kicker">Interactive Shopify sections</span>
+            <h1 id="library-title">Find the right movement for your storefront.</h1>
             <p>
-              Discover premium animated sections here, then place, customise and preview them in
-              Shopify&apos;s theme editor.
+              Compare each layout with real product imagery and working controls, then add your
+              choice directly to the Shopify theme editor.
             </p>
           </div>
-          <div className="library-hero__orbit" aria-hidden="true">
-            <span className="library-hero__orb library-hero__orb--one" />
-            <span className="library-hero__orb library-hero__orb--two" />
-            <span className="library-hero__orb library-hero__orb--three" />
-            <span className="library-hero__spark" />
-          </div>
+          <dl className="library-hero__summary" aria-label="Library highlights">
+            <div>
+              <dt>{components.length}</dt>
+              <dd>Live layouts</dd>
+            </div>
+            <div>
+              <dt>4</dt>
+              <dd>Page types</dd>
+            </div>
+            <div>
+              <dt>1 click</dt>
+              <dd>To theme editor</dd>
+            </div>
+          </dl>
         </section>
 
         <section className="library-toolbar" aria-label="Component filters">
@@ -472,7 +517,7 @@ export default function Index() {
             <s-search-field
               label="Search components"
               labelAccessibilityVisibility="exclusive"
-              placeholder="Search components"
+              placeholder="Search by layout, style or use case"
               value={query}
               onInput={(event) => setQuery(event.currentTarget.value)}
             />
@@ -512,11 +557,11 @@ export default function Index() {
 
         <div className="library-results-heading">
           <div>
-            <p className="library-results-heading__eyebrow">Curated collection</p>
-            <h2>{category === "All" ? "All components" : category}</h2>
+            <p className="library-results-heading__eyebrow">Choose a section</p>
+            <h2>{category === "All" ? "All layouts" : category}</h2>
           </div>
           <span>
-            {visibleComponents.length} {visibleComponents.length === 1 ? "component" : "components"} · {selectedTemplate}
+            {visibleComponents.length} {visibleComponents.length === 1 ? "layout" : "layouts"} · {selectedTemplate}
           </span>
         </div>
 
@@ -537,7 +582,7 @@ export default function Index() {
         ) : (
           <div className="library-empty">
             <span aria-hidden="true">✦</span>
-            <h2>No components found</h2>
+            <h2>No layouts found</h2>
             <p>Try another search or category.</p>
             <s-button
               onClick={() => {
