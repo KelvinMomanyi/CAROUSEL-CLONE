@@ -10,7 +10,6 @@ export const BILLING_PLANS = {
       maxSliders: 1,
       maxProducts: 6,
       allowedBlocks: [
-        "product-slideshow",
         "slider",
         "slide9",
         "animated_hero",

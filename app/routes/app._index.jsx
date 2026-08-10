@@ -27,7 +27,7 @@ const components = [
     templates: ["index", "product", "collection", "page"],
     content: "Collection",
     performance: "Light",
-    access: "Free",
+    access: "Pro",
     preview: "carousel",
     palette: "citrus",
   },
