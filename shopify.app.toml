@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "e3c6df0e7669a438f16b27083aa321d0"
-application_url = "https://carouselslider-sandy.vercel.app/"
+application_url = "https://carousel-clone-zeta.vercel.app/"
 embedded = true
 name = "Carousel Slider"
 handle = "slide-extension"
@@ -35,13 +35,13 @@ api_version = "2026-07"
 
 [auth]
 redirect_urls = [
-  "https://carouselslider-sandy.vercel.app/auth/callback",
-  "https://carouselslider-sandy.vercel.app/auth/shopify/callback",
-  "https://carouselslider-sandy.vercel.app/api/auth/callback"
+  "https://carousel-clone-zeta.vercel.app/auth/callback",
+  "https://carousel-clone-zeta.vercel.app/auth/shopify/callback",
+  "https://carousel-clone-zeta.vercel.app/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://carouselslider-sandy.vercel.app/proxy"
+url = "https://carousel-clone-zeta.vercel.app/proxy"
 subpath = "carousel"
 prefix = "apps"
 
