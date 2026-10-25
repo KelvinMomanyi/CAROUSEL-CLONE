@@ -44,6 +44,10 @@ model Shop {
   hasActiveSubscription Boolean   @default(false)
   gracePeriodEndsAt     DateTime?
   lastCheckedAt         DateTime  @default(now())
+  billingVerifiedAt     DateTime?
+  shopPlanCheckedAt     DateTime?
+  entitlementSyncKey    String?
+  entitlementSyncedAt   DateTime?
   accessToken           String?
   shopifyPlanName       String?
   subscriptionId        String?

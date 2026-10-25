@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData } from "react-router";
 import {
   getBillingConfig,
@@ -301,6 +301,23 @@ function createThemeEditorLink({ shop, apiKey, blockHandle, template }) {
 
 function ComponentPreview({ component }) {
   const guidance = componentGuidance[component.handle];
+  const container = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!window.IntersectionObserver) {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "300px" });
+    if (container.current) observer.observe(container.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="component-card__media">
@@ -310,7 +327,8 @@ function ComponentPreview({ component }) {
         </span>
         <span>{guidance?.interaction || "Interactive"}</span>
       </div>
-      <div className="motion-card-preview">
+      <div className="motion-card-preview" ref={container}>
+        {visible && (
         <iframe
           src={`/preview/${component.handle}?surface=library`}
           title={`${component.name} interactive preview`}
@@ -318,6 +336,7 @@ function ComponentPreview({ component }) {
           loading="lazy"
           sandbox="allow-scripts allow-same-origin"
         />
+        )}
       </div>
     </div>
   );

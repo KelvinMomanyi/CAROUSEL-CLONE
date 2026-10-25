@@ -1,5 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "react-router",
-  "buildCommand": "npm run setup && npm run build"
+  "buildCommand": "npm run setup && npm run build",
+  "headers": [
+    {
+      "source": "/preview-assets/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
 }

@@ -1,4 +1,6 @@
 node_modules
+/public/preview-assets/
+/app/generated/
 
 # macOS
 .DS_Store

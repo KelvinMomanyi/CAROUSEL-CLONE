@@ -10,6 +10,8 @@
 // portrait image (for card / stack layouts).  Same picsum seed → same photo,
 // just different crop so the pairing stays visually consistent.
 // ---------------------------------------------------------------------------
+import { previewAssetBase } from "../generated/preview-assets.server";
+
 const PRODUCTS = [
   {
     id: 1001,
@@ -1205,7 +1207,7 @@ function buildPreviewHtml(handle) {
 
   const sliderHtml = config.render(PRODUCTS);
   const jsTag = config.js
-    ? `<script src="/extension-assets/${config.js}"></script>`
+    ? `<script src="${previewAssetBase}/${config.js}"></script>`
     : "";
 
   return `<!DOCTYPE html>
@@ -1243,7 +1245,7 @@ function buildPreviewHtml(handle) {
     /* Smooth image loading */
     img { display: block; max-width: 100%; }
   </style>
-  <link rel="stylesheet" href="/extension-assets/${config.css}">
+  <link rel="stylesheet" href="${previewAssetBase}/${config.css}">
 </head>
 <body>
 ${sliderHtml}
@@ -1257,6 +1259,7 @@ ${jsTag}
 // ---------------------------------------------------------------------------
 export const loader = ({ params, request }) => {
   const config = CONFIGS[params.handle];
+  if (!config) return new Response("Preview not found", { status: 404 });
   const surface = new URL(request.url).searchParams.get("surface");
   const html = surface === "library" && config
     ? buildLibraryPreviewHtml(params.handle, config)
@@ -1264,7 +1267,8 @@ export const loader = ({ params, request }) => {
   return new Response(html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-cache",
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Vercel-CDN-Cache-Control": "public, s-maxage=3600",
     },
   });
 };

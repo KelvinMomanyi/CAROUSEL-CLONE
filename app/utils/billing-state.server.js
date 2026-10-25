@@ -1,4 +1,5 @@
 import prisma from "../db.server";
+import { isFresh, SHOP_PLAN_REFRESH_MS } from "./billing-refresh.server";
 
 export const BILLING_PLANS = {
   free: {
@@ -83,22 +84,13 @@ export function createGracePeriodEnd(trialEndsAt) {
   return addDays(trialEndsAt, BILLING_GRACE_DAYS);
 }
 
-async function fetchShopPlan(session) {
-  if (!session?.shop || !session?.accessToken) {
-    throw new Error("Cannot fetch the shop plan without an authenticated session");
+async function fetchShopPlan(session, admin) {
+  if (!session?.shop || !admin) {
+    throw new Error("Cannot fetch the shop plan without an authenticated Admin client");
   }
-
-  const apiVersion = process.env.SHOPIFY_ADMIN_API_VERSION || "2026-07";
-  const response = await fetch(
-    `https://${session.shop}/admin/api/${apiVersion}/graphql.json`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Access-Token": session.accessToken,
-      },
-      body: JSON.stringify({
-        query: `#graphql
+  let response;
+  try {
+    response = await admin.graphql(`#graphql
           query ShopBillingPlan {
             shop {
               plan {
@@ -106,19 +98,15 @@ async function fetchShopPlan(session) {
                 partnerDevelopment
               }
             }
-          }`,
-      }),
-    },
-  );
-
-  if (!response.ok) {
-    if (response.status === 401) {
+          }`);
+  } catch (error) {
+    if (error?.response?.code === 401 || error?.status === 401) {
       throw new ShopifyAuthError(
         `Shopify rejected the stored access token for ${session.shop}`,
-        { shop: session.shop, status: response.status },
+        { shop: session.shop, status: 401 },
       );
     }
-    throw new Error(`Unable to fetch the Shopify plan (${response.status})`);
+    throw error;
   }
 
   const payload = await response.json();
@@ -139,9 +127,9 @@ function planSnapshot(plan) {
   };
 }
 
-export async function recordShopInstall(session) {
+export async function recordShopInstall(session, admin) {
   const now = new Date();
-  const plan = planSnapshot(await fetchShopPlan(session));
+  const plan = planSnapshot(await fetchShopPlan(session, admin));
   const shop = await prisma.shop.upsert({
     where: { shop: session.shop },
     create: {
@@ -152,11 +140,16 @@ export async function recordShopInstall(session) {
       hasActiveSubscription: false,
       lastCheckedAt: now,
       uninstalledAt: null,
+      shopPlanCheckedAt: now,
+      entitlementSyncKey: null,
       ...plan,
     },
     update: {
       lastCheckedAt: now,
       uninstalledAt: null,
+      shopPlanCheckedAt: now,
+      entitlementSyncKey: null,
+      billingVerifiedAt: null,
       ...plan,
     },
   });
@@ -164,9 +157,14 @@ export async function recordShopInstall(session) {
   return ensureLiveTrialStarted(shop, now);
 }
 
-export async function syncShopFromShopify(session) {
+export async function syncShopFromShopify(session, { force = false, admin } = {}) {
+  const existing = await prisma.shop.findUnique({ where: { shop: session.shop } });
+  if (!force && existing && !existing.uninstalledAt &&
+      isFresh(existing.shopPlanCheckedAt, SHOP_PLAN_REFRESH_MS)) {
+    return ensureLiveTrialStarted(existing);
+  }
   const now = new Date();
-  const plan = planSnapshot(await fetchShopPlan(session));
+  const plan = planSnapshot(await fetchShopPlan(session, admin));
   const shop = await prisma.shop.upsert({
     where: { shop: session.shop },
     create: {
@@ -177,11 +175,13 @@ export async function syncShopFromShopify(session) {
       hasActiveSubscription: false,
       lastCheckedAt: now,
       uninstalledAt: null,
+      shopPlanCheckedAt: now,
       ...plan,
     },
     update: {
       lastCheckedAt: now,
       uninstalledAt: null,
+      shopPlanCheckedAt: now,
       ...plan,
     },
   });

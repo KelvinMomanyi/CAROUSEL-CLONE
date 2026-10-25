@@ -2,6 +2,11 @@
   "name": "carousel-clone",
   "private": true,
   "scripts": {
+    "tokens:audit": "node --env-file-if-exists=.env scripts/migrate-offline-tokens.mjs",
+    "tokens:migrate": "node --env-file-if-exists=.env scripts/migrate-offline-tokens.mjs --apply",
+    "test:tokens": "node --test tests/offline-tokens.test.mjs",
+    "test:scaling": "node --test tests/scaling.test.mjs",
+    "test:preview-build": "node --test tests/preview-build.test.mjs",
     "build": "react-router build",
     "dev": "shopify app dev --config local --use-localhost",
     "dev:tunnel": "shopify app dev",
@@ -25,6 +30,7 @@
     "node": ">=20.19 <22 || >=22.12"
   },
   "dependencies": {
+    "@shopify/shopify-api": "^13.1.0",
     "@prisma/client": "^6.16.3",
     "@react-router/dev": "^7.12.0",
     "@react-router/fs-routes": "^7.12.0",

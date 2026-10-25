@@ -1,4 +1,11 @@
 import prisma from "../db.server";
+import {
+  entitlementSyncKey,
+  ENTITLEMENT_REFRESH_MS,
+  isFresh,
+  requiresImmediateBillingRefresh,
+  SUBSCRIPTION_REFRESH_MS,
+} from "./billing-refresh.server";
 import { authenticate, unauthenticated } from "../shopify.server";
 import {
   BILLING_GRACE_DAYS,
@@ -92,6 +99,7 @@ async function markActiveSubscription(shopDomain, subscription) {
       subscriptionId: subscription.id,
       currentPlan: "pro",
       lastCheckedAt: now,
+      billingVerifiedAt: now,
     },
     update: {
       hasActiveSubscription: true,
@@ -99,6 +107,7 @@ async function markActiveSubscription(shopDomain, subscription) {
       subscriptionId: subscription.id,
       currentPlan: "pro",
       lastCheckedAt: now,
+      billingVerifiedAt: now,
       uninstalledAt: null,
     },
   });
@@ -113,6 +122,7 @@ async function markNoActiveSubscription(shopDomain) {
       subscriptionId: null,
       currentPlan: "free",
       lastCheckedAt: new Date(),
+      billingVerifiedAt: new Date(),
     },
   });
 }
@@ -131,7 +141,7 @@ export async function requireBilling(request) {
   let shop;
 
   try {
-    shop = await syncShopFromShopify(session);
+    shop = await syncShopFromShopify(session, { force: requiresImmediateBillingRefresh(request), admin });
   } catch (error) {
     if (isShopifyAuthError(error)) {
       await clearStoredShopAuth(session.shop);
@@ -140,11 +150,12 @@ export async function requireBilling(request) {
   }
 
   let activeSubscription = null;
-  if (!shop.isDevStore) {
+  if (!shop.isDevStore && (requiresImmediateBillingRefresh(request) ||
+      !isFresh(shop.billingVerifiedAt, SUBSCRIPTION_REFRESH_MS))) {
     activeSubscription = await getActiveSubscription(admin);
     if (activeSubscription) {
       shop = await markActiveSubscription(session.shop, activeSubscription);
-    } else if (shop.hasActiveSubscription || shop.currentPlan === "pro") {
+    } else {
       shop = await markNoActiveSubscription(session.shop);
     }
   }
@@ -173,6 +184,7 @@ export async function createBillingApproval(request, authenticatedContext) {
   const baseUrl = process.env.SHOPIFY_APP_URL || requestUrl.origin;
   const returnUrl = new URL("/app", baseUrl);
   returnUrl.searchParams.set("shop", session.shop);
+  returnUrl.searchParams.set("billing_return", "1");
   const host = requestUrl.searchParams.get("host");
   if (host) returnUrl.searchParams.set("host", host);
 
@@ -261,6 +273,7 @@ export async function updateSubscriptionStatus(shopDomain, subscription) {
         subscription?.id || subscription?.admin_graphql_api_id || null,
       currentPlan: active ? "pro" : "free",
       lastCheckedAt: now,
+      billingVerifiedAt: now,
     },
     update: {
       hasActiveSubscription: active,
@@ -270,16 +283,20 @@ export async function updateSubscriptionStatus(shopDomain, subscription) {
         : null,
       currentPlan: active ? "pro" : "free",
       lastCheckedAt: now,
+      billingVerifiedAt: now,
     },
   });
 }
 
 export async function syncEntitlementsForShop(shopDomain, shopRecord) {
-  const { admin } = await unauthenticated.admin(shopDomain);
   const shop =
     shopRecord ||
     (await prisma.shop.findUnique({ where: { shop: shopDomain } }));
-  if (shop) await syncBillingMetafields({ admin, shop });
+  if (!shop || shop.uninstalledAt ||
+      (shop.entitlementSyncKey === entitlementSyncKey(getBillingMetafieldSnapshot(shop)) &&
+       isFresh(shop.entitlementSyncedAt, ENTITLEMENT_REFRESH_MS))) return;
+  const { admin } = await unauthenticated.admin(shopDomain);
+  await syncBillingMetafields({ admin, shop });
 }
 
 export async function markAppUninstalled(shopDomain) {
@@ -293,6 +310,8 @@ export async function markAppUninstalled(shopDomain) {
       currentPlan: "free",
       uninstalledAt: now,
       lastCheckedAt: now,
+      entitlementSyncKey: null,
+      billingVerifiedAt: null,
     },
     update: {
       hasActiveSubscription: false,
@@ -302,6 +321,8 @@ export async function markAppUninstalled(shopDomain) {
       subscriptionId: null,
       uninstalledAt: now,
       lastCheckedAt: now,
+      entitlementSyncKey: null,
+      billingVerifiedAt: null,
     },
   });
 }
@@ -338,6 +359,10 @@ export function getBillingMetafieldSnapshot(shop) {
 
 export async function syncBillingMetafields({ admin, shop }) {
   if (!admin || !shop || shop.uninstalledAt) return;
+  const snapshot = getBillingMetafieldSnapshot(shop);
+  const syncKey = entitlementSyncKey(snapshot);
+  if (shop.entitlementSyncKey === syncKey &&
+      isFresh(shop.entitlementSyncedAt, ENTITLEMENT_REFRESH_MS)) return;
   const installationResponse = await admin.graphql(
     `#graphql
       query CurrentAppInstallationId {
@@ -348,7 +373,6 @@ export async function syncBillingMetafields({ admin, shop }) {
   const ownerId = installationPayload.data?.currentAppInstallation?.id;
   if (!ownerId) throw new Error("No current Shopify app installation found");
 
-  const snapshot = getBillingMetafieldSnapshot(shop);
   const response = await admin.graphql(
     `#graphql
       mutation SyncBillingEntitlements($metafields: [MetafieldsSetInput!]!) {
@@ -400,4 +424,17 @@ export async function syncBillingMetafields({ admin, shop }) {
     ),
   ];
   if (errors.length) throw new Error(errors.join(", "));
+  // A concurrent billing update must not be marked as synchronized by this call.
+  const saved = await prisma.shop.updateMany({
+    where: { shop: shop.shop, updatedAt: shop.updatedAt },
+    data: { entitlementSyncKey: syncKey, entitlementSyncedAt: new Date() },
+  });
+  if (!saved.count) {
+    // A slower request may have written an older snapshot to Shopify. Force the
+    // next request to repair it, even if another request already cached a key.
+    await prisma.shop.updateMany({
+      where: { shop: shop.shop },
+      data: { entitlementSyncKey: null, entitlementSyncedAt: null },
+    });
+  }
 }

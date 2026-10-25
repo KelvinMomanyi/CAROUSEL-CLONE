@@ -14,7 +14,7 @@ export const action = async ({ request }) => {
       webhookAdmin && webhookSession
         ? { admin: webhookAdmin, session: webhookSession }
         : await unauthenticated.admin(shop);
-    const updatedShop = await syncShopFromShopify(background.session);
+    const updatedShop = await syncShopFromShopify(background.session, { force: true, admin: background.admin });
     await syncBillingMetafields({ admin: background.admin, shop: updatedShop });
     return Response.json({ success: true, synced: true });
   } catch (error) {

@@ -40,7 +40,8 @@ export const loader = async ({ request }) => {
     const plan = ["dev", "subscribed", "trial", "grace"].includes(access)
       ? "pro"
       : "free";
-    syncEntitlementsForShop(session.shop, shop).catch(() => {});
+    // Await necessary work; unawaited serverless work can be frozen after response.
+    await syncEntitlementsForShop(session.shop, shop);
 
     return Response.json(
       { active: access !== "none", plan, limits: getPlanLimits(plan) },

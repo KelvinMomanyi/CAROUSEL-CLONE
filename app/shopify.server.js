@@ -41,8 +41,8 @@ const shopify = shopifyApp({
     },
   },
   hooks: {
-    afterAuth: async ({ session }) => {
-      await recordShopInstall(session);
+    afterAuth: async ({ session, admin }) => {
+      await recordShopInstall(session, admin);
       try {
         await recordAffiliateInstall(session);
       } catch (error) {
