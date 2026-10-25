@@ -9,6 +9,14 @@ copied access token passed directly to fetch.
 The flag does not retroactively exchange non-expiring sessions. The email's 63
 tokens is a historical count; check the production database before migration.
 
+For a read-only check of whether legacy tokens are currently accepted, run
+`npm run tokens:audit -- --verify`. Stored installation labels are local database
+metadata, not authoritative confirmation from Shopify. Verification does not
+exchange tokens or modify records. A 401 means the stored token was rejected;
+a 404 means the store/API endpoint was not available to that request. Neither
+alone proves why access ended or authorizes deleting merchant records. Reconcile
+store status, then have any still-active merchant reopen the app to reauthenticate.
+
 ## Runbook
 
 1. Verify the production database has the existing refresh-token migrations.

@@ -1,12 +1,13 @@
 import "@shopify/shopify-api/adapters/node";
-import { shopifyApi, ApiVersion, LogSeverity } from "@shopify/shopify-api";
+import { shopifyApi, ApiVersion, LogSeverity, Session } from "@shopify/shopify-api";
 import { PrismaClient } from "@prisma/client";
 import { parseArgs } from "node:util";
 import { createInterface } from "node:readline";
-import { migrateOfflineSession, SHOP_DOMAIN } from "./offline-token-migration.mjs";
+import { migrateOfflineSession, safeMigrationFailure, SHOP_DOMAIN } from "./offline-token-migration.mjs";
 
 const { values } = parseArgs({ options: {
   apply: { type: "boolean", default: false },
+  verify: { type: "boolean", default: false },
   shop: { type: "string" },
   limit: { type: "string", default: "100" },
   "expected-client-id": { type: "string" },
@@ -32,9 +33,13 @@ const limit = Number(values.limit);
 if (!Number.isInteger(limit) || limit < 1 || limit > 1000 ||
     (values.shop && !SHOP_DOMAIN.test(values.shop))) throw new Error("Invalid shop or limit (1–1000)");
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
+if (values.apply && values.verify) throw new Error("Use either --apply or --verify, not both");
 if (values.apply && (!process.env.SHOPIFY_API_KEY || !process.env.SHOPIFY_API_SECRET ||
     values["expected-client-id"] !== process.env.SHOPIFY_API_KEY)) {
   throw new Error("Apply requires app credentials and a matching --expected-client-id");
+}
+if (values.verify && (!process.env.SHOPIFY_API_KEY || !process.env.SHOPIFY_API_SECRET)) {
+  throw new Error("Verification requires the app credentials");
 }
 
 const prisma = new PrismaClient();
@@ -55,13 +60,30 @@ try {
   console.log(JSON.stringify({ mode: values.apply ? "apply" : "audit", counts }));
   const rows = await prisma.session.findMany({ where: legacy, orderBy: { id: "asc" }, take: limit,
     select: { id: true, shop: true, isOnline: true, expires: true, refreshToken: true, scope: true,
-      ...(values.apply ? { accessToken: true } : {}) },
+      ...(values.apply || values.verify ? { accessToken: true } : {}) },
   });
   if (!values.apply) {
     for (const row of rows) {
       const installation = await prisma.shop.findUnique({ where: { shop: row.shop }, select: { uninstalledAt: true } });
       console.log(JSON.stringify({ shop: row.shop, status: "legacy",
         installation: !installation ? "unknown" : installation.uninstalledAt ? "uninstalled" : "installed" }));
+      if (values.verify) {
+        const api = shopifyApi({ apiKey: process.env.SHOPIFY_API_KEY,
+          apiSecretKey: process.env.SHOPIFY_API_SECRET, hostName: "offline-migration.invalid",
+          apiVersion: ApiVersion.July26, isEmbeddedApp: true,
+          logger: { level: LogSeverity.Error, log: () => {} },
+        });
+        try {
+          const client = new api.clients.Graphql({ session: new Session({ ...row, state: "" }) });
+          const result = await client.request("query TokenMigrationCheck { currentAppInstallation { id } }");
+          console.log(JSON.stringify({ shop: row.shop,
+            status: result.data?.currentAppInstallation?.id ? "legacy_token_accepted_by_admin_api" : "no_installation_returned" }));
+        } catch (error) {
+          const detail = safeMigrationFailure(error);
+          console.log(JSON.stringify({ shop: row.shop, status: "admin_api_verification_failed", ...detail, stage: "admin_api_verification" }));
+          process.exitCode = 1;
+        }
+      }
     }
   } else {
     const api = shopifyApi({ apiKey: process.env.SHOPIFY_API_KEY,
@@ -87,9 +109,9 @@ try {
         });
         console.log(JSON.stringify({ shop: row.shop, status }));
         if (status !== "migrated") { process.exitCode = 1; break; }
-      } catch {
+      } catch (error) {
         // SDK/network errors may contain tokens. Never print raw errors or bodies.
-        console.error(JSON.stringify({ shop: row.shop, status: "failed_stop_and_audit" }));
+        console.error(JSON.stringify({ shop: row.shop, status: "failed_stop_and_audit", ...safeMigrationFailure(error) }));
         process.exitCode = 1;
         break;
       }

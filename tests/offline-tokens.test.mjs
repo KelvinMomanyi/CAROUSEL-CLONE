@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { migrateOfflineSession } from "../scripts/offline-token-migration.mjs";
+import { migrateOfflineSession, safeMigrationFailure } from "../scripts/offline-token-migration.mjs";
 import "@shopify/shopify-api/adapters/node";
 import { Session } from "@shopify/shopify-api";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
@@ -51,8 +51,18 @@ test("incomplete exchange responses are not persisted; write failures remain rec
   await assert.rejects(migrateOfflineSession(legacy, {
     exchange: async () => ({ session: issued() }),
     save: async () => { throw new Error("Database unavailable"); },
-  }), /Database unavailable/);
+  }), (error) => error.migrationStage === "persistence");
   assert.equal(legacy.accessToken, "legacy-test-token");
+});
+
+test("diagnostics expose only approved error codes, never credentials or error bodies", () => {
+  const error = new Error("secret-access-token");
+  error.migrationStage = "exchange";
+  error.cause = { message: "secret-refresh-token", response: { code: 400,
+    body: { error: "invalid_subject_token", access_token: "secret-access-token" } } };
+  assert.deepEqual(safeMigrationFailure(error), { stage: "exchange", httpStatus: 400, reason: "invalid_subject_token" });
+  error.cause.response.body.error = "secret-access-token";
+  assert.ok(!JSON.stringify(safeMigrationFailure(error)).includes("secret"));
 });
 
 test("concurrent authentication is not reported as a completed migration", async () => {
